@@ -9,15 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.2.0",
     "@vapor-ui/core": "^0.3.0",
     "axios": "^1.10.0",
+    "clsx": "^2.1.1",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-kakao-maps-sdk": "^1.2.0",
-    "react-player": "^3.1.0",
     "react-youtube": "^10.1.0",
-    "swiper": "^11.2.10"
+    "swiper": "^11.2.10",
+    "swr": "^2.3.4",
+    "use-long-press": "^3.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
