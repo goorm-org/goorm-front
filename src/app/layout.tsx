@@ -22,8 +22,12 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
       </head>
-      <body className="bg-gray-100 max-w-[393px] mx-auto h-dvh">
-        <SWRProvider>{children}</SWRProvider>
+      <body>
+        <SWRProvider>
+          <main className="bg-primary-50 max-w-[393px] mx-auto h-dvh">
+            {children}
+          </main>
+        </SWRProvider>
       </body>
     </html>
   );
