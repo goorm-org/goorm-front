@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@vapor-ui/core": "^0.2.1",
+    "axios": "^1.10.0",
     "next": "15.3.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-kakao-maps-sdk": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
