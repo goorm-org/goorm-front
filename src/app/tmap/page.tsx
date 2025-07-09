@@ -22,6 +22,59 @@ export default function TmapPage() {
   const [polylines, setPolylines] = useState<any[]>([]);
 
   const APP_KEY = process.env.NEXT_PUBLIC_T_MAP_KEY;
+
+  // 두 지점 간 직선 거리 계산 (Haversine 공식)
+  const calculateDistance = (point1: MapLocation, point2: MapLocation) => {
+    const R = 6371; // 지구 반지름 (km)
+    const dLat = ((point2.lat! - point1.lat!) * Math.PI) / 180;
+    const dLng = ((point2.lng! - point1.lng!) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((point1.lat! * Math.PI) / 180) *
+        Math.cos((point2.lat! * Math.PI) / 180) *
+        Math.sin(dLng / 2) *
+        Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // 전체 경로 거리 계산
+  const calculateTotalDistance = (route: MapLocation[]) => {
+    let total = 0;
+    for (let i = 0; i < route.length - 1; i++) {
+      total += calculateDistance(route[i], route[i + 1]);
+    }
+    return total;
+  };
+
+  // 순열 생성 함수
+  const generatePermutations = (arr: MapLocation[]): MapLocation[][] => {
+    if (arr.length <= 1) return [arr];
+
+    const perms: MapLocation[][] = [];
+    for (let i = 0; i < arr.length; i++) {
+      const current = arr[i];
+      const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
+      const subPerms = generatePermutations(remaining);
+
+      for (const perm of subPerms) {
+        perms.push([current, ...perm]);
+      }
+    }
+
+    return perms;
+  };
+
+  // 최적 경로 찾기 (위도 기준 정렬 - 북→남)
+  const findOptimalRoute = (locations: MapLocation[]): MapLocation[] => {
+    if (locations.length <= 1) return locations;
+
+    // 위도 기준으로 정렬 (북쪽에서 남쪽으로)
+    const sortedLocations = [...locations].sort((a, b) => b.lat! - a.lat!);
+
+    return sortedLocations;
+  };
+
   const LOCATIONS: MapLocation[] = [
     {
       lat: 33.450206,
@@ -30,16 +83,16 @@ export default function TmapPage() {
       description: "플레이스 캠프 제주",
     },
     {
-      lat: 33.452651,
-      lng: 126.92461,
-      address: "서귀포시 성산읍 고성리 224-33",
-      description: "광치기해변",
-    },
-    {
       lat: 33.440708,
       lng: 126.898767,
       address: "서귀포시 성산읍 서성일로 1168번길",
       description: "빛의 벙커",
+    },
+    {
+      lat: 33.452651,
+      lng: 126.92461,
+      address: "서귀포시 성산읍 고성리 224-33",
+      description: "광치기해변",
     },
   ];
   const WIDTH = "100%";
@@ -264,10 +317,17 @@ export default function TmapPage() {
     polylines.forEach((pl) => pl.setMap(null));
     setPolylines([]);
 
+    // 최적 경로 순서로 정렬
+    const optimizedLocations = findOptimalRoute(locations);
+    console.log(
+      "최적화된 순서:",
+      optimizedLocations.map((loc) => loc.description)
+    );
+
     let newPolylines: any[] = [];
-    for (let i = 0; i < locations.length - 1; i++) {
-      const start = locations[i];
-      const end = locations[i + 1];
+    for (let i = 0; i < optimizedLocations.length - 1; i++) {
+      const start = optimizedLocations[i];
+      const end = optimizedLocations[i + 1];
       // 각 구간별로 경로 API 호출 및 polyline 생성
       try {
         // lat/lng 타입 가드 및 주소 변환
