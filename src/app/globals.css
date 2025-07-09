@@ -1,2 +1,5 @@
+@layer theme, vapor-theme, base, vapor-reset, vapor-component, vapor-utilities, utilities;
+@import "@vapor-ui/core/styles.css";
+
 @import "tailwindcss";
 

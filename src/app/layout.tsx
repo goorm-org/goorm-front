@@ -21,7 +21,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body>{children}</body>
+      <body className="bg-gray-100 max-w-[393px] mx-auto">{children}</body>
     </html>
   );
 }
