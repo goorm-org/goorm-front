@@ -3,13 +3,36 @@ import YouTube from "react-youtube";
 import { useLongPress } from "use-long-press";
 import MuteToggleIcon from "./mute-toggle-icon";
 import ShortsInfoSection from "./shorts-info-section";
-import { ShortsData } from "../_hooks/useShorts";
+import { ShortsPlace } from "../_apis/explore.interface";
 
 interface ShortsProps {
-  item: ShortsData;
+  item: ShortsPlace;
   page: number;
   currentPage: number;
 }
+
+// YouTube Shorts URL에서 video ID를 안전하게 추출하는 함수 추가
+const extractVideoId = (url: string): string => {
+  try {
+    // YouTube Shorts URL 패턴: https://youtube.com/shorts/VIDEO_ID 또는 https://youtube.com/shorts/VIDEO_ID?si=...
+    const shortsMatch = url.match(/\/shorts\/([a-zA-Z0-9_-]+)/);
+    if (shortsMatch) {
+      return shortsMatch[1];
+    }
+
+    // 일반 YouTube URL도 처리 (혹시 모를 경우를 대비)
+    const urlObj = new URL(url);
+    const videoId = urlObj.searchParams.get("v");
+    if (videoId) {
+      return videoId;
+    }
+
+    throw new Error("Invalid YouTube URL");
+  } catch (error) {
+    console.error("YouTube URL 파싱 오류:", error, url);
+    return "";
+  }
+};
 
 export default function Shorts({ item, page, currentPage }: ShortsProps) {
   const playerRef = useRef<YouTube>(null);
@@ -99,7 +122,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     <div className="flex bg-black max-h-[calc(100dvh-80px)] relative">
       <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-[calc(100dvh-80px)]">
         <YouTube
-          videoId={item.id}
+          videoId={extractVideoId(item.details.shortsUrl)}
           ref={playerRef}
           onReady={() => setIsPlayerReady(true)}
           className="w-full h-full rounded-lg"
@@ -114,7 +137,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
               loop: 1,
               playsinline: 1,
               modestbranding: 1,
-              playlist: item.id,
+              playlist: extractVideoId(item.details.shortsUrl),
               rel: 0,
             },
           }}
