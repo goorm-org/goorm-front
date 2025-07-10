@@ -31,7 +31,7 @@ const useShorts = () => {
     const bookmarkId = data?.find((item) => item.id === placeId)?.bookmarks[0]
       .id;
     if (!bookmarkId) return;
-    await deleteShortBookmark(bookmarkId);
+    await deleteShortBookmark([bookmarkId]);
     mutate((prev) => {
       return prev?.map((item) =>
         item.id === placeId

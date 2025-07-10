@@ -8,5 +8,9 @@ export const getShorts = () => api.get<GetShortsResponse>("/shorts");
 export const postShortBookmark = (id: number) =>
   api.post<{ id: number }>(`/bookmarks/places/${id}`);
 
-export const deleteShortBookmark = (id: number) =>
-  api.delete<{ id: number }>(`/bookmarks/${id}`);
+export const deleteShortBookmark = (ids: number[]) =>
+  api.delete<{ id: number }>("/bookmarks", {
+    data: {
+      ids,
+    },
+  });
