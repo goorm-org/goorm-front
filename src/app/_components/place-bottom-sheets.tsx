@@ -39,13 +39,21 @@ ChartJS.register(
 export default function PlaceBottomSheets({
   snap,
   location,
+  onBookmarkToggle,
 }: {
   snap: number | string | null;
   location: ShortsData | null;
+  onBookmarkToggle?: (placeId: number) => void;
 }) {
   const borderStyle = "border-[#E5E5EA] my-4 w-full";
 
-  const isBookMarked = location?.bookmarks.length;
+  const isBookMarked = !!location?.bookmarks.length;
+
+  const handleBookmarkToggle = () => {
+    if (location && onBookmarkToggle) {
+      onBookmarkToggle(location.id);
+    }
+  };
 
   // 유튜브 URL에서 비디오 ID 추출
   const getYouTubeVideoId = (url: string) => {
@@ -113,7 +121,6 @@ export default function PlaceBottomSheets({
 
     const now = dayjs().tz("Asia/Seoul");
     const currentTime = now.format("HH:mm");
-    const currentDay = now.day(); // 0: 일요일, 1: 월요일, ...
 
     // 첫 번째 영업시간 사용 (예: "08:00-21:00")
     const hours = openingHours[0];
@@ -123,27 +130,6 @@ export default function PlaceBottomSheets({
     const isOpen = currentTime >= openTime && currentTime <= closeTime;
 
     return isOpen;
-  };
-
-  const getOpenStatus = (openingHours: string[]) => {
-    if (!openingHours || openingHours.length === 0) {
-      return { isOpen: false, status: "영업시간 정보 없음" };
-    }
-
-    const now = dayjs().tz("Asia/Seoul");
-    const currentTime = now.format("HH:mm");
-    const hours = openingHours[0];
-    const [openTime, closeTime] = hours.split("-");
-
-    const isOpen = currentTime >= openTime && currentTime <= closeTime;
-
-    return {
-      isOpen,
-      status: isOpen ? "Open" : "Closed",
-      currentTime,
-      openTime,
-      closeTime,
-    };
   };
 
   const isOpen = checkIsOpen(location?.openingHours ?? []);
@@ -189,8 +175,10 @@ export default function PlaceBottomSheets({
                 <Drawer.Title className="text-2xl text-gray-900 font-bold w-8/10 overflow-hidden text-ellipsis whitespace-nowrap">
                   {location?.title || "장소명"}
                 </Drawer.Title>
-                {/* TODO 임시 props */}
-                <Bookmark isLiked={false} />
+                <Bookmark
+                  isBookMarked={isBookMarked}
+                  onClick={handleBookmarkToggle}
+                />
               </div>
             </li>
             <li>
@@ -468,7 +456,7 @@ export default function PlaceBottomSheets({
                 fill="black"
               />
             </svg>
-            <span className="text-xs">Traffic</span>
+            w<span className="text-xs">Traffic</span>
           </div>
           <div className="mx-4 pt-4">
             <Line

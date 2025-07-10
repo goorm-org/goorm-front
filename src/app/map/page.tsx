@@ -4,6 +4,7 @@
 
 import { useEffect, useRef, useState, useId } from "react";
 import { ShortsData } from "@/app/map/_types/map";
+import { createBookmark, deleteBookmark } from "./_api/map";
 import { Drawer } from "vaul";
 import { getShortsList } from "./_api/map";
 import PlaceBottomSheets from "@/app/_components/place-bottom-sheets";
@@ -58,6 +59,51 @@ export default function Map() {
       setLocations(data);
     })();
   }, []);
+
+  const toggleBookmark = async (placeId: number) => {
+    const location = locations.find((location) => location.id === placeId);
+    if (!location) return;
+
+    const isBookMarked = !!location.bookmarks.length;
+
+    try {
+      if (isBookMarked) {
+        // 북마크 삭제 - bookmarkId를 사용
+        const bookmarkId = location.bookmarks[0]?.id;
+        if (!bookmarkId) return;
+
+        await deleteBookmark(bookmarkId);
+        // 로컬 상태 업데이트
+        setLocations((prev) =>
+          prev.map((loc) =>
+            loc.id === placeId ? { ...loc, bookmarks: [] } : loc
+          )
+        );
+        // selectedLocation도 업데이트
+        if (selectedLocation && selectedLocation.id === placeId) {
+          setSelectedLocation({ ...selectedLocation, bookmarks: [] });
+        }
+      } else {
+        // 북마크 추가
+        const { data } = await createBookmark(placeId);
+        // 로컬 상태 업데이트 - 응답에서 받은 북마크 ID 사용
+        setLocations((prev) =>
+          prev.map((loc) =>
+            loc.id === placeId ? { ...loc, bookmarks: [{ id: data.id }] } : loc
+          )
+        );
+        // selectedLocation도 업데이트
+        if (selectedLocation && selectedLocation.id === placeId) {
+          setSelectedLocation({
+            ...selectedLocation,
+            bookmarks: [{ id: data.id }],
+          });
+        }
+      }
+    } catch (error) {
+      console.error("북마크 토글 실패:", error);
+    }
+  };
 
   // 티맵 스크립트 로드
   useEffect(() => {
@@ -346,7 +392,11 @@ export default function Map() {
         setActiveSnapPoint={setSnap}
       >
         <Drawer.Portal>
-          <PlaceBottomSheets snap={snap} location={selectedLocation} />
+          <PlaceBottomSheets
+            snap={snap}
+            location={selectedLocation}
+            onBookmarkToggle={toggleBookmark}
+          />
         </Drawer.Portal>
       </Drawer.Root>
     </div>
