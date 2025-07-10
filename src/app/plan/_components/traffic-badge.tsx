@@ -88,8 +88,7 @@ export default function TrafficBadge({
 
   const currentBadge =
     trafficBadgeMap[trafficStatus as keyof typeof trafficBadgeMap];
-  const currentTxtColor = `text-[${currentBadge.color}]`;
-  console.log(currentTxtColor);
+  const currentTxtColor = `text-[${currentBadge?.color ?? "gray-500"}}]`;
 
   if (!currentBadge) return null;
 
