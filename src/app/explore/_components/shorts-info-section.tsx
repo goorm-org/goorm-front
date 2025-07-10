@@ -1,10 +1,11 @@
 import { Badge } from "@vapor-ui/core";
-import useShorts, { ShortsData } from "../_hooks/useShorts";
+import useShorts from "../_hooks/useShorts";
 import ShortsBookmark from "./shorts-bookmark";
 import DetailDrawerButton from "./detail-drawer-button";
+import { ShortsPlace } from "../_apis/explore.interface";
 
 interface ShortsInfoSectionProps {
-  item: ShortsData;
+  item: ShortsPlace;
 }
 
 export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
@@ -19,7 +20,7 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
           <DetailDrawerButton />
         </div>
         <div className="text-white text-[16px] leading-[24px] text-ellipsis overflow-hidden whitespace-nowrap">
-          {item.desc}
+          {item.address}
         </div>
         <div className="mt-[8px] flex gap-[8px]">
           <Badge
@@ -39,7 +40,8 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
                 fill="white"
               />
             </svg>
-            {item.time}
+            {item.openingHours[0].toString().padStart(2, "0") + ":00"} -{" "}
+            {item.openingHours[1].toString().padStart(2, "0") + ":00"}
           </Badge>
           <Badge
             size="md"
@@ -58,7 +60,7 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
                 fill="white"
               />
             </svg>
-            {item.score}
+            {item.details.averageRating.toFixed(1)}
           </Badge>
         </div>
       </div>

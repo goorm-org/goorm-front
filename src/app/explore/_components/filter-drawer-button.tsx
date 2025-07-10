@@ -12,8 +12,15 @@ import {
   getOnboardingDataFromSessionStorage,
   updateOnboardingDataToSessionStorage,
 } from "@/app/_utils/session-storage";
+import { patchOnboardingInfo } from "@/app/onboarding/_apis/onboarding.api";
 
-export default function FilterDrawerButton() {
+export interface FilterDrawerButtonProps {
+  onApplyFilter: () => void;
+}
+
+export default function FilterDrawerButton({
+  onApplyFilter,
+}: FilterDrawerButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPlaceCategory, setSelectedPlaceCategory] = useState<number[]>(
     []
@@ -25,7 +32,12 @@ export default function FilterDrawerButton() {
       vibeList: selectedLocation,
       placeCategoryList: selectedPlaceCategory,
     });
+    patchOnboardingInfo({
+      vibeList: selectedLocation,
+      placeCategoryList: selectedPlaceCategory,
+    });
     setIsOpen(false);
+    onApplyFilter();
   };
 
   useEffect(() => {
