@@ -7,7 +7,7 @@ import clsx from "clsx";
 import { headers } from "next/headers";
 import "./globals.css";
 import "@vapor-ui/core/styles.css";
-import Navigation from "@/components/Navigation";
+import Navigation from "@/app/_components/navigation";
 
 export const metadata: Metadata = {
   title: "모다모영",
