@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (!response || response.data) Promise.reject();
+    if (!response) Promise.reject();
     return response.data;
   },
   (error: AxiosError) => {
