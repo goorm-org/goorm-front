@@ -72,7 +72,9 @@ export default function PlaceBottomSheets({
   };
 
   const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const datapoints = [12, 18, 20, 10, 8, 12, 18];
+  const datapoints =
+    location?.congestionDegreeList?.map((item) => Number(item["degree"]) * 5) ||
+    [];
   const data = {
     labels: labels,
     datasets: [

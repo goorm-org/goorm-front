@@ -25,4 +25,5 @@ export interface ShortsData {
   averagePrice: number;
   averageRating: string;
   bookmarks: { id: number }[];
+  congestionDegreeList: { [key: string]: string | number | null }[];
 }
