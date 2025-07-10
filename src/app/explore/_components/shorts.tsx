@@ -4,6 +4,7 @@ import { useLongPress } from "use-long-press";
 import MuteToggleIcon from "./mute-toggle-icon";
 import ShortsInfoSection from "./shorts-info-section";
 import { ShortsData } from "../_hooks/useShorts";
+import FilterDrawerButton from "./filter-drawer-button";
 
 interface ShortsProps {
   item: ShortsData;
@@ -130,6 +131,9 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4 z-30">
         <ShortsInfoSection item={item} />
+      </div>
+      <div className="absolute top-[16px] right-[50%] translate-x-[50%] z-40">
+        <FilterDrawerButton />
       </div>
     </div>
   );
