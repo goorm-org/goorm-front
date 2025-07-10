@@ -4,29 +4,60 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-900: #DD590D;
-  --color-primary-800: #E77011;
-  --color-primary-700: #EE7F12;
-  --color-primary-600: #F48F15;
-  --color-primary-500: #F89B18;
-  --color-primary-400: #F9A931;
-  --color-primary-300: #FAB853;
-  --color-primary-200: #FACD84;
-  --color-primary-100: #FDE0B4;
-  --color-primary-50: #FEF4E1;
+  --color-primary-900: #dd590d;
+  --color-primary-800: #e77011;
+  --color-primary-700: #ee7f12;
+  --color-primary-600: #f48f15;
+  --color-primary-500: #f89b18;
+  --color-primary-400: #f9a931;
+  --color-primary-300: #fab853;
+  --color-primary-200: #facd84;
+  --color-primary-100: #fde0b4;
+  --color-primary-50: #fef4e1;
 
-  --color-secondary-900: #265A63;
-  --color-secondary-800: #337D8E;
-  --color-secondary-700: #3890A8;
-  --color-secondary-600: #41A4C1;
-  --color-secondary-500: #47B4D5;
-  --color-secondary-400: #4DBEDE;
-  --color-secondary-300: #62C9E5;
-  --color-secondary-200: #8AD9EF;
-  --color-secondary-100: #B7E7F6;
-  --color-secondary-50: #E2F6FC;
+  --color-secondary-900: #265a63;
+  --color-secondary-800: #337d8e;
+  --color-secondary-700: #3890a8;
+  --color-secondary-600: #41a4c1;
+  --color-secondary-500: #47b4d5;
+  --color-secondary-400: #4dbede;
+  --color-secondary-300: #62c9e5;
+  --color-secondary-200: #8ad9ef;
+  --color-secondary-100: #b7e7f6;
+  --color-secondary-50: #e2f6fc;
 
-  --color-background-1: #EEEEEE;
-  --color-background-2: #FFF;
+  --color-background-1: #eeeeee;
+  --color-background-2: #fff;
 }
 
+/* Checkbox, Radio custom style */
+@layer vapor-component {
+  /* Checkbox */
+  [role="checkbox"][data-state="checked"] {
+    background-color: var(--color-primary-700) !important;
+    border-color: var(--color-primary-700) !important;
+  }
+
+  [role="checkbox"][data-state="indeterminate"] {
+    background-color: var(--color-primary-500) !important;
+    border-color: var(--color-primary-500) !important;
+  }
+
+  /* Radio */
+  [role="radio"][data-state="checked"] {
+    background-color: var(--color-primary-700) !important;
+    border-color: var(--color-primary-700) !important;
+  }
+
+  /* hover */
+  [role="checkbox"]:hover[data-state="checked"],
+  [role="radio"]:hover[data-state="checked"] {
+    background-color: var(--color-primary-800) !important;
+    border-color: var(--color-primary-800) !important;
+  }
+
+  [role="checkbox"]:hover[data-state="indeterminate"] {
+    background-color: var(--color-primary-600) !important;
+    border-color: var(--color-primary-600) !important;
+  }
+}
