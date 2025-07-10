@@ -15,7 +15,7 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
       <div className="flex flex-col min-w-0 flex-1">
         <div className="flex gap-[8px] items-center">
           <div className="text-white text-[24px] font-bold leading-[36px]">
-            {item.name}
+            {item.title}
           </div>
           <DetailDrawerButton />
         </div>
@@ -40,8 +40,7 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
                 fill="white"
               />
             </svg>
-            {item.openingHours[0].toString().padStart(2, "0") + ":00"} -{" "}
-            {item.openingHours[1].toString().padStart(2, "0") + ":00"}
+            {item.openingHours[0]}
           </Badge>
           <Badge
             size="md"
@@ -60,7 +59,7 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
                 fill="white"
               />
             </svg>
-            {item.details.averageRating.toFixed(1)}
+            {item.averageRating}
           </Badge>
         </div>
       </div>

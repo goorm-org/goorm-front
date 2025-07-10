@@ -15,7 +15,7 @@ export default function DetailDrawerButton() {
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
     >
-      <Drawer.Trigger>
+      <Drawer.Trigger asChild>
         <IconButton
           size="sm"
           className="bg-primary-700 rounded-full"

@@ -51,7 +51,7 @@ export default function FilterDrawerButton({
 
   return (
     <Drawer.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Drawer.Trigger>
+      <Drawer.Trigger asChild>
         {!isOpen && (
           <Button
             size="xl"
