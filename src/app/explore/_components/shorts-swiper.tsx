@@ -38,9 +38,12 @@ export default function ShortsSwiper() {
         ))}
         <div className="absolute top-[16px] right-[50%] translate-x-[50%] z-40">
           <FilterDrawerButton
-            onApplyFilter={() => {
+            onApplyFilter={async () => {
+              const currentItem = data?.[currentPage];
+              if (!currentItem) return;
+
+              await mutate();
               swiperRef.current?.swiper.slideNext();
-              mutate();
             }}
           />
         </div>

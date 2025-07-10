@@ -21,9 +21,7 @@ export interface GetOnboardingInfoResponse {
 export const getOnboardingInfo = () =>
   api.get<GetOnboardingInfoResponse>("/onboardings");
 
-export interface PatchOnboardingInfoDTO extends Partial<PostOnboardingInfoDTO> {
-  id: number;
-}
+export type PatchOnboardingInfoDTO = Partial<PostOnboardingInfoDTO>;
 
 export const patchOnboardingInfo = (data: PatchOnboardingInfoDTO) =>
   api.patch("/onboardings", data);

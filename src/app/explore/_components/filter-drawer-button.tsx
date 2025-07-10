@@ -12,6 +12,7 @@ import {
   getOnboardingDataFromSessionStorage,
   updateOnboardingDataToSessionStorage,
 } from "@/app/_utils/session-storage";
+import { patchOnboardingInfo } from "@/app/onboarding/_apis/onboarding.api";
 
 export interface FilterDrawerButtonProps {
   onApplyFilter: () => void;
@@ -28,6 +29,10 @@ export default function FilterDrawerButton({
 
   const onClickApplyFilter = () => {
     updateOnboardingDataToSessionStorage({
+      vibeList: selectedLocation,
+      placeCategoryList: selectedPlaceCategory,
+    });
+    patchOnboardingInfo({
       vibeList: selectedLocation,
       placeCategoryList: selectedPlaceCategory,
     });
