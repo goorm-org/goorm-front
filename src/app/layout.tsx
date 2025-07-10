@@ -5,8 +5,8 @@ import Navigation from "@/app/_components/navigation";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "모다모영",
-  description: "모다모영",
+  title: "JEJU GO",
+  description: "Short-form Travel Planner for Foreign Tourists in Jeju Island",
 };
 
 export default async function RootLayout({
