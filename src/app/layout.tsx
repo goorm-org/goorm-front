@@ -1,5 +1,4 @@
 import "./globals.css";
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SWRProvider } from "./_providers/swr-provider";
 import { headers } from "next/headers";
@@ -33,14 +32,12 @@ export default async function RootLayout({
         />
       </head>
       <body className="relative bg-primary-50">
-        <Suspense fallback={null}>
-          <SWRProvider>
-            <main className="bg-background-2 max-w-[393px] mx-auto h-dvh">
-              {children}
-              {!isExcludeNavigation && <Navigation />}
-            </main>
-          </SWRProvider>
-        </Suspense>
+        <SWRProvider>
+          <main className="bg-background-2 max-w-[393px] mx-auto h-dvh">
+            {children}
+            {!isExcludeNavigation && <Navigation />}
+          </main>
+        </SWRProvider>
       </body>
     </html>
   );
