@@ -1,12 +1,17 @@
-import { useState } from "react";
 import OnboardingTitle from "../onboarding-title";
 import Step01DateRange from "./step-01-date-range";
-import { DateRange } from "react-day-picker";
+import { useFormContext } from "react-hook-form";
+import { OnboardingSchema } from "../../_schemas/onboarding_schema";
 
 export default function Step01() {
-  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(
-    undefined
-  );
+  const { watch, setValue } = useFormContext<OnboardingSchema>();
+  const departureDate = watch("departure_date");
+  const arrivalDate = watch("arrival_date");
+
+  const selectedRange = {
+    from: departureDate ? new Date(departureDate) : undefined,
+    to: arrivalDate ? new Date(arrivalDate) : undefined,
+  };
 
   return (
     <div className="px-[24px] mt-[8px]">
@@ -16,7 +21,10 @@ export default function Step01() {
           description="Let’s design your Jeju trip"
         />
         <Step01DateRange
-          onSelect={setSelectedRange}
+          onSelect={(range) => {
+            setValue("departure_date", range.from?.toISOString() || "");
+            setValue("arrival_date", range.to?.toISOString() || "");
+          }}
           inputSelectedRange={selectedRange}
         />
       </div>

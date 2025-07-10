@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-const ONBOARDING_LAST_STEP = 3;
+const ONBOARDING_LAST_STEP = "3";
 
 const useStep = () => {
   const searchParams = useSearchParams();
@@ -22,6 +22,7 @@ const useStep = () => {
   return {
     step,
     nextStep,
+    isLastStep: step === ONBOARDING_LAST_STEP,
   };
 };
 

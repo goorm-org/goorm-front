@@ -43,7 +43,7 @@ export default function Step01DateRange({
               label="Departure Date"
               placeholder="25.07.11"
               value={
-                inputSelectedRange
+                inputSelectedRange?.from
                   ? dayjs(inputSelectedRange?.from).format("YY.MM.DD")
                   : ""
               }
@@ -65,7 +65,7 @@ export default function Step01DateRange({
               label="Arrival Date"
               placeholder="25.07.18"
               value={
-                inputSelectedRange
+                inputSelectedRange?.to
                   ? dayjs(inputSelectedRange?.to).format("YY.MM.DD")
                   : ""
               }
