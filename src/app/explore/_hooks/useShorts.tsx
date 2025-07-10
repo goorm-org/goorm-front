@@ -16,26 +16,42 @@ const useShorts = () => {
     fetcher()
   );
 
-  const handleToggleBookmark = (id: number) => {
-    try {
-      const isBookmarked = data?.find((item) => item.id === id)?.isBookmarked;
-      if (isBookmarked) {
-        deleteShortBookmark(id);
-      } else {
-        postShortBookmark(id);
-      }
-      const newData = data?.map((item) =>
-        item.id === id ? { ...item, isBookmarked: !item.isBookmarked } : item
+  const createBookmark = async (placeId: number) => {
+    const { data } = await postShortBookmark(placeId);
+    mutate((prev) => {
+      return prev?.map((item) =>
+        item.id === placeId
+          ? { ...item, bookmarks: [...item.bookmarks, { ...data }] }
+          : item
       );
-
-      mutate(newData, false);
-    } catch (error) {
-      console.error(error);
-      mutate(data, false);
-    }
+    }, false);
   };
 
-  return { data, isLoading, error, handleToggleBookmark, mutate };
+  const deleteBookmark = async (placeId: number) => {
+    const bookmarkId = data?.find((item) => item.id === placeId)?.bookmarks[0]
+      .id;
+    if (!bookmarkId) return;
+    await deleteShortBookmark(bookmarkId);
+    mutate((prev) => {
+      return prev?.map((item) =>
+        item.id === placeId
+          ? {
+              ...item,
+              bookmarks: item.bookmarks.filter((b) => b.id !== bookmarkId),
+            }
+          : item
+      );
+    }, false);
+  };
+
+  return {
+    data,
+    isLoading,
+    error,
+    mutate,
+    createBookmark,
+    deleteBookmark,
+  };
 };
 
 export default useShorts;

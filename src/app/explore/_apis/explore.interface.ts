@@ -35,5 +35,5 @@ export interface ShortsPlace {
   pricePerPerson: number[];
   averagePrice: number;
   averageRating: string;
-  isBookmarked: boolean;
+  bookmarks: { id: number }[];
 }

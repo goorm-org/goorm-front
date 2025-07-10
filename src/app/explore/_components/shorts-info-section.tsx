@@ -9,7 +9,8 @@ interface ShortsInfoSectionProps {
 }
 
 export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
-  const { handleToggleBookmark } = useShorts();
+  const { createBookmark, deleteBookmark } = useShorts();
+  const isBookmarked = item.bookmarks.length > 0;
   return (
     <div className="flex justify-between items-start w-full gap-[24px]">
       <div className="flex flex-col min-w-0 flex-1">
@@ -64,8 +65,14 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
         </div>
       </div>
       <ShortsBookmark
-        isBookmarked={item.isBookmarked}
-        onToggle={() => handleToggleBookmark(item.id)}
+        isBookmarked={isBookmarked}
+        onToggle={() => {
+          if (isBookmarked) {
+            deleteBookmark(item.id);
+            return;
+          }
+          createBookmark(item.id);
+        }}
       />
     </div>
   );
