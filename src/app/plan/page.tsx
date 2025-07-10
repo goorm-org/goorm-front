@@ -22,8 +22,6 @@ export default function Plan() {
     setCurrentIdx((prev) => (prev === 0 ? locations.length - 1 : prev - 1));
   };
 
-  console.log;
-
   const locations: MapLocation[] = [
     {
       lat: 33.452651,
@@ -162,7 +160,7 @@ export default function Plan() {
         </div>
         <Slider
           ref={(slider) => {
-            // @ts-ignore
+            // @ts-expect-error: slider is not defined
             sliderRef = slider;
           }}
           dots={false}

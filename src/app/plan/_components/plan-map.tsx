@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import { useEffect, useRef, useState, useId } from "react";
@@ -17,12 +20,9 @@ export default function PlanMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapId = useId();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [map, setMap] = useState<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [markers, setMarkers] = useState<any[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [infoWindows, setInfoWindows] = useState<any[]>([]);
   // 경로선 상태
   const [polyline, setPolyline] = useState<any>(null);
@@ -39,24 +39,6 @@ export default function PlanMap({
     "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/ico-marker-two.svg",
     "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/ico-marker-three.svg",
   ];
-
-  // 순열 생성 함수
-  // const generatePermutations = (arr: MapLocation[]): MapLocation[][] => {
-  //   if (arr.length <= 1) return [arr];
-
-  //   const perms: MapLocation[][] = [];
-  //   for (let i = 0; i < arr.length; i++) {
-  //     const current = arr[i];
-  //     const remaining = [...arr.slice(0, i), ...arr.slice(i + 1)];
-  //     const subPerms = generatePermutations(remaining);
-
-  //     for (const perm of subPerms) {
-  //       perms.push([current, ...perm]);
-  //     }
-  //   }
-
-  //   return perms;
-  // };
 
   const CENTER_LAT = locations[1]?.lat || 33.450233;
   const CENTER_LNG = locations[1]?.lng || 126.918494;
@@ -238,7 +220,7 @@ export default function PlanMap({
         return;
       }
 
-      let linePoints: any[] = [];
+      const linePoints: any[] = [];
       for (const feature of resultData) {
         if (feature.geometry.type === "LineString") {
           for (const coord of feature.geometry.coordinates) {
@@ -277,7 +259,7 @@ export default function PlanMap({
     polylines.forEach((pl) => pl.setMap(null));
     setPolylines([]);
 
-    let newPolylines: any[] = [];
+    const newPolylines: any[] = [];
     for (let i = 0; i < locations.length - 1; i++) {
       const start = locations[i];
       const end = locations[i + 1];
@@ -335,7 +317,7 @@ export default function PlanMap({
           console.error("경로 API 응답 오류: features가 배열이 아님", data);
           continue;
         }
-        let linePoints: any[] = [];
+        const linePoints: any[] = [];
         for (const feature of resultData) {
           if (feature.geometry.type === "LineString") {
             for (const coord of feature.geometry.coordinates) {
