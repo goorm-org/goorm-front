@@ -45,6 +45,8 @@ export default function PlaceBottomSheets({
 }) {
   const borderStyle = "border-[#E5E5EA] my-4 w-full";
 
+  const isBookMarked = location?.bookmarks.length;
+
   // 유튜브 URL에서 비디오 ID 추출
   const getYouTubeVideoId = (url: string) => {
     const videoIdMatch = url.match(
@@ -111,7 +113,7 @@ export default function PlaceBottomSheets({
 
     const now = dayjs().tz("Asia/Seoul");
     const currentTime = now.format("HH:mm");
-    // const currentDay = now.day(); // 0: 일요일, 1: 월요일, ...
+    const currentDay = now.day(); // 0: 일요일, 1: 월요일, ...
 
     // 첫 번째 영업시간 사용 (예: "08:00-21:00")
     const hours = openingHours[0];
@@ -123,26 +125,26 @@ export default function PlaceBottomSheets({
     return isOpen;
   };
 
-  // const getOpenStatus = (openingHours: string[]) => {
-  //   if (!openingHours || openingHours.length === 0) {
-  //     return { isOpen: false, status: "영업시간 정보 없음" };
-  //   }
+  const getOpenStatus = (openingHours: string[]) => {
+    if (!openingHours || openingHours.length === 0) {
+      return { isOpen: false, status: "영업시간 정보 없음" };
+    }
 
-  //   const now = dayjs().tz("Asia/Seoul");
-  //   const currentTime = now.format("HH:mm");
-  //   const hours = openingHours[0];
-  //   const [openTime, closeTime] = hours.split("-");
+    const now = dayjs().tz("Asia/Seoul");
+    const currentTime = now.format("HH:mm");
+    const hours = openingHours[0];
+    const [openTime, closeTime] = hours.split("-");
 
-  //   const isOpen = currentTime >= openTime && currentTime <= closeTime;
+    const isOpen = currentTime >= openTime && currentTime <= closeTime;
 
-  //   return {
-  //     isOpen,
-  //     status: isOpen ? "Open" : "Closed",
-  //     currentTime,
-  //     openTime,
-  //     closeTime,
-  //   };
-  // };
+    return {
+      isOpen,
+      status: isOpen ? "Open" : "Closed",
+      currentTime,
+      openTime,
+      closeTime,
+    };
+  };
 
   const isOpen = checkIsOpen(location?.openingHours ?? []);
 
