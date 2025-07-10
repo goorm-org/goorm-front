@@ -6,12 +6,8 @@ import LandingFooter from "./landing-footer";
 
 export default function LandingLottie() {
   return (
-    <div className="relative">
-      <Lottie
-        options={{ animationData, loop: true }}
-        width={"100%"}
-        height={"100%"}
-      />
+    <div className="relative bg-[#e8e8e8]">
+      <Lottie options={{ animationData, loop: true }} height="100dvh" />
       <div className="absolute bottom-0 w-full">
         <LandingFooter />
       </div>

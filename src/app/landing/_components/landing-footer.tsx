@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function LandingFooter() {
   return (
-    <Card.Root className="bg-transparent">
+    <Card.Root className="bg-transparent border-none">
       <Card.Footer className="flex flex-col gap-[8px]">
         <Link href="/onboarding">
           <Button stretch size="lg" className="bg-primary-700">
