@@ -18,7 +18,7 @@ export default function ShortsInfoSection({ item }: ShortsInfoSectionProps) {
           <div className="text-white text-[24px] font-bold leading-[36px]">
             {item.title}
           </div>
-          <DetailDrawerButton />
+          <DetailDrawerButton item={item} />
         </div>
         <div className="text-white text-[16px] leading-[24px] text-ellipsis overflow-hidden whitespace-nowrap">
           {item.address}

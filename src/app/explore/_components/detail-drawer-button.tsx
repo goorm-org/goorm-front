@@ -4,10 +4,16 @@ import PlaceBottomSheets from "@/app/_components/place-bottom-sheets";
 import { IconButton } from "@vapor-ui/core";
 import { useState } from "react";
 import { Drawer } from "vaul";
+import { ShortsPlace } from "../_apis/explore.interface";
+import { ShortsData } from "@/app/map/_types/map";
 
 const snapPoints = ["320px", 1];
 
-export default function DetailDrawerButton() {
+interface DetailDrawerButtonProps {
+  item: ShortsPlace;
+}
+
+export default function DetailDrawerButton({ item }: DetailDrawerButtonProps) {
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   return (
     <Drawer.Root
@@ -36,7 +42,10 @@ export default function DetailDrawerButton() {
         </IconButton>
       </Drawer.Trigger>
       <Drawer.Portal>
-        <PlaceBottomSheets snap={snap} />
+        <PlaceBottomSheets
+          snap={snap}
+          location={item as unknown as ShortsData}
+        />
       </Drawer.Portal>
     </Drawer.Root>
   );

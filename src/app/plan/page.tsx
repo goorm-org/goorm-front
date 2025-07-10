@@ -2,9 +2,6 @@
 
 import { useRef, useState } from "react";
 
-import useSWR from "swr";
-import { getTripList } from "./_apis/plan";
-
 import Slider from "react-slick";
 import PlanHeader from "@/app/plan/_components/plan-header";
 import { Badge, Button } from "@vapor-ui/core";
@@ -17,7 +14,7 @@ export default function Plan() {
   const [currentIdx, setCurrentIdx] = useState(0);
   let sliderRef = useRef<Slider | null>(null);
 
-  const { data } = useSWR("getTripList", getTripList);
+  // const { data } = useSWR("getTripList", getTripList);
 
   const next = () => {
     sliderRef.current?.slickNext();
