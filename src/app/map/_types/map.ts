@@ -24,4 +24,5 @@ export interface ShortsData {
   pricePerPerson: number[];
   averagePrice: number;
   averageRating: string;
+  bookmarks: string[];
 }
