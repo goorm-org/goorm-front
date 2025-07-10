@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import { useState } from "react";
 import Shorts from "./shorts";
 import useShorts from "../_hooks/useShorts";
+import FilterDrawerButton from "./filter-drawer-button";
 
 export default function ShortsSwiper() {
   const { data } = useShorts();
@@ -34,6 +35,9 @@ export default function ShortsSwiper() {
             <Shorts item={item} page={index} currentPage={currentPage} />
           </SwiperSlide>
         ))}
+        <div className="absolute top-[16px] right-[50%] translate-x-[50%] z-40">
+          <FilterDrawerButton />
+        </div>
       </Swiper>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import OnboardingTitle from "../onboarding-title";
+import Step02RadioGroup from "./step-02-radio-group";
 
 export default function Step02() {
   return (
@@ -10,6 +11,7 @@ export default function Step02() {
           title="Who are you traveling with?"
           description="Let’s design your Jeju trip"
         />
+        <Step02RadioGroup />
       </div>
     </div>
   );
