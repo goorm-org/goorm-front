@@ -1,9 +1,9 @@
+import "./globals.css";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SWRProvider } from "./_providers/swr-provider";
 import { headers } from "next/headers";
 import Navigation from "@/app/_components/navigation";
-import "./globals.css";
 
 export const metadata: Metadata = {
   title: "모다모영",
