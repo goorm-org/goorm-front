@@ -42,26 +42,28 @@ export default function FilterDrawerButton() {
   return (
     <Drawer.Root open={isOpen} onOpenChange={setIsOpen}>
       <Drawer.Trigger>
-        <Button
-          size="xl"
-          className="rounded-full bg-white text-black font-bold"
-        >
-          <div className="flex gap-[8px]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="24"
-              viewBox="0 0 25 24"
-              fill="none"
-            >
-              <path
-                d="M11.5831 20C11.2998 20 11.0623 19.9042 10.8706 19.7125C10.6789 19.5208 10.5831 19.2833 10.5831 19V13L4.78309 5.6C4.53309 5.26667 4.49559 4.91667 4.67059 4.55C4.84559 4.18333 5.14975 4 5.58309 4H19.5831C20.0164 4 20.3206 4.18333 20.4956 4.55C20.6706 4.91667 20.6331 5.26667 20.3831 5.6L14.5831 13V19C14.5831 19.2833 14.4873 19.5208 14.2956 19.7125C14.1039 19.9042 13.8664 20 13.5831 20H11.5831Z"
-                fill="#3E404C"
-              />
-            </svg>
-            <span>Add Filter</span>
-          </div>
-        </Button>
+        {!isOpen && (
+          <Button
+            size="xl"
+            className="rounded-full bg-white text-black font-bold"
+          >
+            <div className="flex gap-[8px]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="24"
+                viewBox="0 0 25 24"
+                fill="none"
+              >
+                <path
+                  d="M11.5831 20C11.2998 20 11.0623 19.9042 10.8706 19.7125C10.6789 19.5208 10.5831 19.2833 10.5831 19V13L4.78309 5.6C4.53309 5.26667 4.49559 4.91667 4.67059 4.55C4.84559 4.18333 5.14975 4 5.58309 4H19.5831C20.0164 4 20.3206 4.18333 20.4956 4.55C20.6706 4.91667 20.6331 5.26667 20.3831 5.6L14.5831 13V19C14.5831 19.2833 14.4873 19.5208 14.2956 19.7125C14.1039 19.9042 13.8664 20 13.5831 20H11.5831Z"
+                  fill="#3E404C"
+                />
+              </svg>
+              <span>Add Filter</span>
+            </div>
+          </Button>
+        )}
       </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 z-40" />
