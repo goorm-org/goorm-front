@@ -3,21 +3,27 @@ import useSWR from "swr";
 export interface ShortsData {
   id: string;
   desc: string;
-  user: string;
+  name: string;
+  time: string;
+  score: string;
   isBookmarked: boolean;
 }
 
 const shorts_data: ShortsData[] = [
   {
     id: "JWPAXulXvh4",
-    desc: "Shorts 1",
-    user: "user1",
+    desc: "A hidden local café in Jeju with  A hidden local café in Jeju with A hidden local café in Jeju with  A hidden local café in Jeju with ... 1",
+    name: "Cafe Haejigae",
+    time: "09:00 ~ 21:00",
+    score: "4.5",
     isBookmarked: false,
   },
   {
     id: "rFv-lRbbGoA",
-    desc: "Shorts 2",
-    user: "user2",
+    desc: "A hidden local café in Jeju with  A hidden local café in Jeju with A hidden local café in Jeju with  A hidden local café in Jeju with ... 2",
+    name: "Cafe Haejigae",
+    time: "09:00 ~ 21:00",
+    score: "4.5",
     isBookmarked: true,
   },
 ];
