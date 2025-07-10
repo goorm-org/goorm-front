@@ -1,6 +1,6 @@
 import CheckboxButtonGroup from "@/app/_components/checkbox-button-group";
 import OnboardingTitle from "../onboarding-title";
-import { FILTER_OPTIONS } from "@/app/_constants/filter";
+import { LOCATION_FILTER_OPTIONS } from "@/app/_constants/filter";
 import { useFormContext } from "react-hook-form";
 import { OnboardingSchema } from "../../_schemas/onboarding_schema";
 
@@ -15,7 +15,7 @@ export default function Step03() {
           description="Let’s design your Jeju trip"
         />
         <CheckboxButtonGroup
-          options={FILTER_OPTIONS}
+          options={LOCATION_FILTER_OPTIONS}
           selectedValues={filterOptions}
           onSelect={(value) => {
             if (filterOptions.includes(value)) {

@@ -5,7 +5,7 @@ export interface CheckboxButtonGroupProps {
   options: {
     label: string;
     value: string;
-    icon: {
+    icon?: {
       active: React.ReactNode;
       inactive: React.ReactNode;
     };
@@ -34,9 +34,9 @@ export default function CheckboxButtonGroup({
           onClick={() => onSelect(option.value)}
         >
           <div className="flex gap-[8px] items-center">
-            {selectedValues.includes(option.value)
+            {option.icon && selectedValues.includes(option.value)
               ? option.icon.active
-              : option.icon.inactive}
+              : option.icon?.inactive}
             {option.label}
           </div>
         </Button>

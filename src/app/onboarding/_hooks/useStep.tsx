@@ -1,13 +1,12 @@
 "use client";
 
+import { shallowPush } from "@/app/_utils/shallow";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 const ONBOARDING_LAST_STEP = "3";
 
 const useStep = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const step = searchParams.get("step") ?? "1";
 
   const nextStep = () => {
@@ -16,7 +15,7 @@ const useStep = () => {
     }
     const params = new URLSearchParams(searchParams);
     params.set("step", (Number(step) + 1).toString());
-    router.push(`/onboarding?${params.toString()}`);
+    shallowPush(`/onboarding?${params.toString()}`);
   };
 
   return {

@@ -1,11 +1,12 @@
 import { Button, Card } from "@vapor-ui/core";
 import useStep from "../_hooks/useStep";
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, useFormContext } from "react-hook-form";
 import {
   onboardingSchema,
   OnboardingSchema,
 } from "../_schemas/onboarding_schema";
 import { useRouter } from "next/navigation";
+import { setOnboardingDataToLocalStorage } from "@/app/_utils/filter";
 
 // Step별 validation 필드 매핑
 const STEP_VALIDATION_FIELDS = {
@@ -35,7 +36,13 @@ export default function OnboardingFooter() {
 
   const onSubmit = (data: OnboardingSchema) => {
     console.log(data);
+    setOnboardingDataToLocalStorage(data);
     router.push("/explore");
+  };
+
+  const onError = (error: FieldErrors<OnboardingSchema>) => {
+    console.log(watch());
+    console.log(error);
   };
 
   return (
@@ -45,7 +52,7 @@ export default function OnboardingFooter() {
           stretch
           className="bg-primary-700"
           size="lg"
-          onClick={isLastStep ? handleSubmit(onSubmit) : nextStep}
+          onClick={isLastStep ? handleSubmit(onSubmit, onError) : nextStep}
           disabled={!isValid()}
         >
           NEXT STEP

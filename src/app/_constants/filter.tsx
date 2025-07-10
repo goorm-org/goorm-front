@@ -1,4 +1,4 @@
-export const FILTER_OPTIONS = [
+export const LOCATION_FILTER_OPTIONS = [
   {
     label: "Forest & Trails",
     value: "Forest & Trails",
@@ -325,5 +325,44 @@ export const FILTER_OPTIONS = [
         </svg>
       ),
     },
+  },
+];
+
+export const PLACE_CATEGORY_LOCATION_FILTER_OPTIONS = [
+  {
+    label: "Korean",
+    value: "Korean",
+  },
+  {
+    label: "Asian (Other)",
+    value: "Asian (Other)",
+  },
+  {
+    label: "European",
+    value: "European",
+  },
+  {
+    label: "American",
+    value: "American",
+  },
+  {
+    label: "Latin American",
+    value: "Latin American",
+  },
+  {
+    label: "African",
+    value: "African",
+  },
+  {
+    label: "Café",
+    value: "Café",
+  },
+  {
+    label: "Buffet",
+    value: "Buffet",
+  },
+  {
+    label: "Fast Food",
+    value: "Fast Food",
   },
 ];
