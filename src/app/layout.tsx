@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SWRProvider } from "./_providers/swr-provider";
-import clsx from "clsx";
 import { headers } from "next/headers";
 import "./globals.css";
 import "@vapor-ui/core/styles.css";
@@ -20,7 +19,8 @@ export default async function RootLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
-  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding"];
+  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/plan"];
+
   const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some(
     (path) => pathname.startsWith(path) || pathname === "/"
   );
@@ -36,9 +36,7 @@ export default async function RootLayout({
       <body className="relative bg-primary-50">
         <Suspense fallback={null}>
           <SWRProvider>
-            <main
-              className={clsx("bg-background-2 max-w-[393px] mx-auto h-dvh")}
-            >
+            <main className="bg-background-2 max-w-[393px] mx-auto h-dvh">
               {children}
               {!isExcludeNavigation && <Navigation />}
             </main>
