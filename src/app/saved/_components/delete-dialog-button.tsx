@@ -1,8 +1,22 @@
 import { Button, Dialog } from "@vapor-ui/core";
 import { useState } from "react";
+import useSavedPlaceList from "../_hooks/useSavedPlaceList";
 
-export default function DeleteDialogButton() {
+export interface DeleteDialogButtonProps {
+  selectedItems: number[];
+}
+
+export default function DeleteDialogButton({
+  selectedItems,
+}: DeleteDialogButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { deleteBookmarks } = useSavedPlaceList();
+
+  const handleDelete = async () => {
+    await deleteBookmarks(selectedItems);
+    setIsOpen(false);
+  };
+
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Overlay className="z-50" />
@@ -32,6 +46,7 @@ export default function DeleteDialogButton() {
             stretch
             variant="fill"
             className="text-white bg-primary-700"
+            onClick={handleDelete}
           >
             Delete
           </Button>

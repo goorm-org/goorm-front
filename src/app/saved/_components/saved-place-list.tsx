@@ -35,7 +35,7 @@ export default function SavedPlaceList({
           <Checkbox.Control />
           <Checkbox.Label>{`Select All (${1}/${1})`}</Checkbox.Label>
         </Checkbox.Root>
-        <DeleteDialogButton />
+        <DeleteDialogButton selectedItems={selectedItems} />
       </div>
       <div className="flex flex-col">
         {data?.map((item) => (
