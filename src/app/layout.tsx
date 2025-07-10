@@ -1,12 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import "./globals.css";
-import "@vapor-ui/core/styles.css";
 import { SWRProvider } from "./_providers/swr-provider";
 import clsx from "clsx";
 import { headers } from "next/headers";
 import "./globals.css";
-import "@vapor-ui/core/styles.css";
 import Navigation from "@/components/Navigation";
 
 export const metadata: Metadata = {
