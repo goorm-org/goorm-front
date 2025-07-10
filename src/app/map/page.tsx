@@ -5,13 +5,10 @@
 import { useEffect, useRef, useState, useId } from "react";
 import { ShortsData } from "@/app/map/_types/map";
 import { Drawer } from "vaul";
-import useSWR from "swr";
 import { getShortsList } from "./_api/map";
 import PlaceBottomSheets from "@/app/_components/place-bottom-sheets";
 
 export default function Map() {
-  const { data } = useSWR("getShortsList", getShortsList);
-
   const mapRef = useRef<HTMLDivElement>(null);
   const mapId = useId();
 
@@ -56,10 +53,11 @@ export default function Map() {
 
   // api
   useEffect(() => {
-    if (data?.data) {
-      setLocations(data.data);
-    }
-  }, [data]);
+    (async () => {
+      const { data } = await getShortsList();
+      setLocations(data);
+    })();
+  }, []);
 
   // 티맵 스크립트 로드
   useEffect(() => {

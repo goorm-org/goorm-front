@@ -8,7 +8,7 @@ import DeleteDialogButton from "./delete-dialog-button";
 
 export default function SavedPlaceList() {
   const { data } = useSavedPlaceList();
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   const handleSelectAll = () => {
     if (selectedItems.length === data?.length) {
@@ -35,7 +35,7 @@ export default function SavedPlaceList() {
         {data?.map((item) => (
           <SavedPlaceListItem
             key={item.id}
-            {...item}
+            item={item}
             checked={selectedItems.includes(item.id)}
             onCheckedChange={(checked) => {
               if (checked) {
