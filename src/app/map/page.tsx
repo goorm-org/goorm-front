@@ -104,7 +104,7 @@ export default function TmapPage() {
   // 티맵 스크립트 로드
   useEffect(() => {
     const existingScript = document.querySelector(
-      `script[src*="tmapjs2.min.js"]`
+      `script[src*="tmapjs2.min.js"]`,
     );
 
     if (existingScript) {
@@ -192,18 +192,18 @@ export default function TmapPage() {
 
   // 주소를 좌표로 변환하는 함수
   const geocodeAddress = async (
-    address: string
+    address: string,
   ): Promise<{ lat: number; lng: number } | null> => {
     try {
       const response = await fetch(
         `https://apis.openapi.sk.com/tmap/geo/fullAddrGeo?version=1&format=json&coordType=WGS84GEO&fullAddr=${encodeURIComponent(
-          address
+          address,
         )}`,
         {
           headers: {
             appKey: APP_KEY!,
           },
-        }
+        },
       );
       const data = await response.json();
       const coordinateInfo = data.coordinateInfo;
@@ -228,7 +228,7 @@ export default function TmapPage() {
   const drawRoute = async (
     start: { lat?: number; lng?: number },
     end: { lat?: number; lng?: number },
-    mapInstance: any
+    mapInstance: any,
   ) => {
     setRouteError(null); // 초기화
     // lat/lng 타입 가드
@@ -260,7 +260,7 @@ export default function TmapPage() {
             startName: "출발지",
             endName: "도착지",
           }),
-        }
+        },
       );
       const data = await response.json();
 
@@ -288,7 +288,7 @@ export default function TmapPage() {
               window.Tmapv2 as any
             ).Projection.convertEPSG3857ToWGS84GEO(point);
             linePoints.push(
-              new (window.Tmapv2 as any).LatLng(latlng._lat, latlng._lng)
+              new (window.Tmapv2 as any).LatLng(latlng._lat, latlng._lng),
             );
           }
         }
@@ -321,7 +321,7 @@ export default function TmapPage() {
     const optimizedLocations = findOptimalRoute(locations);
     console.log(
       "최적화된 순서:",
-      optimizedLocations.map((loc) => loc.description)
+      optimizedLocations.map((loc) => loc.description),
     );
 
     let newPolylines: any[] = [];
@@ -374,7 +374,7 @@ export default function TmapPage() {
               startName: start.description || "출발지",
               endName: end.description || "도착지",
             }),
-          }
+          },
         );
         const data = await response.json();
         const resultData = data.features;
@@ -388,13 +388,13 @@ export default function TmapPage() {
             for (const coord of feature.geometry.coordinates) {
               const point = new (window.Tmapv2 as any).Point(
                 coord[0],
-                coord[1]
+                coord[1],
               );
               const latlng = (
                 window.Tmapv2 as any
               ).Projection.convertEPSG3857ToWGS84GEO(point);
               linePoints.push(
-                new (window.Tmapv2 as any).LatLng(latlng._lat, latlng._lng)
+                new (window.Tmapv2 as any).LatLng(latlng._lat, latlng._lng),
               );
             }
           }
@@ -411,7 +411,7 @@ export default function TmapPage() {
       } catch (error) {
         console.error(
           `경로 그리기 실패 (${start.description} → ${end.description}):`,
-          error
+          error,
         );
       }
     }
@@ -468,7 +468,7 @@ export default function TmapPage() {
               lng = coords.lng;
             } else {
               console.warn(
-                `주소를 좌표로 변환할 수 없습니다: ${location.address}`
+                `주소를 좌표로 변환할 수 없습니다: ${location.address}`,
               );
               continue;
             }
