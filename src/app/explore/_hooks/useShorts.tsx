@@ -1,6 +1,7 @@
 import useSWR from "swr";
 // import { getShorts } from "../_apis/explore.api";
 import { ShortsPlace } from "../_apis/explore.interface";
+import { deleteShortBookmark, postShortBookmark } from "../_apis/explore.api";
 
 const mockData: ShortsPlace[] = [
   {
@@ -107,13 +108,23 @@ const useShorts = () => {
   const { data, isLoading, error, mutate } = useSWR("/api/shorts", fetcher);
 
   const handleToggleBookmark = (id: number) => {
-    //todo: 북마크 api 호출
+    try {
+      //todo: 북마크 api 호출
+      const isBookmarked = data?.find((item) => item.id === id)?.isBookmarked;
+      if (isBookmarked) {
+        deleteShortBookmark(id);
+      } else {
+        postShortBookmark(id);
+      }
+      const newData = data?.map((item) =>
+        item.id === id ? { ...item, isBookmarked: !item.isBookmarked } : item
+      );
 
-    const newData = data?.map((item) =>
-      item.id === id ? { ...item, isBookmarked: !item.isBookmarked } : item
-    );
-
-    mutate(newData, false);
+      mutate(newData, false);
+    } catch (error) {
+      console.error(error);
+      mutate(data, false);
+    }
   };
 
   return { data, isLoading, error, handleToggleBookmark };
