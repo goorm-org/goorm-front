@@ -6,7 +6,7 @@ import { OnboardingSchema } from "../../_schemas/onboarding_schema";
 
 export default function Step03() {
   const { watch, setValue } = useFormContext<OnboardingSchema>();
-  const filterOptions = watch("filter_options");
+  const filterOptions = watch("location_filter_options");
   return (
     <div className="px-[24px] mt-[8px]">
       <div className="flex flex-col gap-[48px]">
@@ -20,11 +20,11 @@ export default function Step03() {
           onSelect={(value) => {
             if (filterOptions.includes(value)) {
               setValue(
-                "filter_options",
+                "location_filter_options",
                 filterOptions.filter((v) => v !== value)
               );
             } else {
-              setValue("filter_options", [...filterOptions, value]);
+              setValue("location_filter_options", [...filterOptions, value]);
             }
           }}
         />

@@ -13,8 +13,8 @@ import Loading from "@/app/_components/loading";
 // Step별 validation 필드 매핑
 const STEP_VALIDATION_FIELDS = {
   "1": ["departure_date", "arrival_date"] as const,
-  "2": ["traveling_with"] as const,
-  "3": ["filter_options"] as const,
+  "2": ["category_filter_options"] as const,
+  "3": ["location_filter_options"] as const,
 } as const;
 
 export default function OnboardingFooter() {
