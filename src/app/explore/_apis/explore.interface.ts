@@ -19,12 +19,21 @@ export interface Details {
 
 export interface ShortsPlace {
   id: number;
-  name: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  title: string;
   address: string;
-  category: Category;
-  openingHours: [number, number];
+  latitude: string;
+  longitude: string;
+  categoryHigh: string | null;
+  categoryMiddle: string | null;
+  categoryLow: string | null;
+  shortsUrl: string;
+  openingHours: string[];
   phoneNumber: string;
-  congestionDegreeList: CongestionDegree[];
-  details: Details;
+  pricePerPerson: number[];
+  averagePrice: number;
+  averageRating: string;
   isBookmarked: boolean;
 }

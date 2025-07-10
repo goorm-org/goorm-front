@@ -122,7 +122,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
     <div className="flex bg-black h-[calc(100dvh-80px)] relative">
       <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-[calc(100dvh-80px)]">
         <YouTube
-          videoId={extractVideoId(item.details.shortsUrl)}
+          videoId={extractVideoId(item.shortsUrl)}
           ref={playerRef}
           onReady={() => setIsPlayerReady(true)}
           className="w-full h-full rounded-lg"
@@ -137,7 +137,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
               loop: 1,
               playsinline: 1,
               modestbranding: 1,
-              playlist: extractVideoId(item.details.shortsUrl),
+              playlist: extractVideoId(item.shortsUrl),
               rel: 0,
             },
           }}

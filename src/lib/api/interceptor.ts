@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://5e06d0fa53e6.ngrok-free.app",
+  baseURL: "http://10.10.123.44:3000",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     if (!response) Promise.reject();
-    return response.data;
+    return response;
   },
   (error: AxiosError) => {
     if (error.response) console.error(error.response);
