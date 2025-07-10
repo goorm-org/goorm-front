@@ -1,12 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import "./globals.css";
-import "@vapor-ui/core/styles.css";
 import { SWRProvider } from "./_providers/swr-provider";
 import clsx from "clsx";
 import { headers } from "next/headers";
 import "./globals.css";
-import "@vapor-ui/core/styles.css";
 import Navigation from "@/components/Navigation";
 
 export const metadata: Metadata = {
@@ -22,7 +19,7 @@ export default async function RootLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
-  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/landing", "/explore"];
+  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/landing"];
   const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some((path) =>
     pathname.startsWith(path)
   );

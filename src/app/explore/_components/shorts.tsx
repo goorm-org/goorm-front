@@ -4,6 +4,7 @@ import { useLongPress } from "use-long-press";
 import MuteToggleIcon from "./mute-toggle-icon";
 import ShortsInfoSection from "./shorts-info-section";
 import { ShortsData } from "../_hooks/useShorts";
+import FilterDrawerButton from "./filter-drawer-button";
 
 interface ShortsProps {
   item: ShortsData;
@@ -96,8 +97,8 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   }, [page, currentPage, isPlayerReady]);
 
   return (
-    <div className="flex bg-black">
-      <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-screen">
+    <div className="flex bg-black max-h-[calc(100dvh-80px)] relative">
+      <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-[calc(100dvh-80px)]">
         <YouTube
           videoId={item.id}
           ref={playerRef}
@@ -130,6 +131,9 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4 z-30">
         <ShortsInfoSection item={item} />
+      </div>
+      <div className="absolute top-[16px] right-[50%] translate-x-[50%] z-40">
+        <FilterDrawerButton />
       </div>
     </div>
   );
