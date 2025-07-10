@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import {
   getOnboardingDataFromSessionStorage,
   updateOnboardingDataToSessionStorage,
-} from "@/app/_utils/filter";
+} from "@/app/_utils/session-storage";
 
 export default function FilterDrawerButton() {
   const [isOpen, setIsOpen] = useState(false);

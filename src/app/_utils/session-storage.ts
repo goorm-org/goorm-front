@@ -1,4 +1,7 @@
-import { ONBOARDING_DATA_KEY } from "../_constants/session-storage-key";
+import {
+  IS_COMPLETED_ONBOARDING_KEY,
+  ONBOARDING_DATA_KEY,
+} from "../_constants/session-storage-key";
 import { OnboardingSchema } from "../onboarding/_schemas/onboarding_schema";
 
 /** onboarding data */
@@ -20,4 +23,12 @@ export const updateOnboardingDataToSessionStorage = (
     ONBOARDING_DATA_KEY,
     JSON.stringify({ ...prevFilterData, ...data })
   );
+};
+
+export const setIsCompletedOnboardingToSessionStorage = () => {
+  sessionStorage.setItem(IS_COMPLETED_ONBOARDING_KEY, "true");
+};
+
+export const getIsCompletedOnboardingFromSessionStorage = () => {
+  return sessionStorage.getItem(IS_COMPLETED_ONBOARDING_KEY) === "true";
 };

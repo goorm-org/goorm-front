@@ -1,12 +1,15 @@
 import { Button, Card } from "@vapor-ui/core";
 import useStep from "../_hooks/useStep";
-import { FieldErrors, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   onboardingSchema,
   OnboardingSchema,
 } from "../_schemas/onboarding_schema";
 import { useRouter } from "next/navigation";
-import { setOnboardingDataToSessionStorage } from "@/app/_utils/filter";
+import {
+  setIsCompletedOnboardingToSessionStorage,
+  setOnboardingDataToSessionStorage,
+} from "@/app/_utils/session-storage";
 import { useState } from "react";
 import Loading from "@/app/_components/loading";
 
@@ -38,17 +41,11 @@ export default function OnboardingFooter() {
   };
 
   const onSubmit = async (data: OnboardingSchema) => {
-    console.log(data);
     setOnboardingDataToSessionStorage(data);
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    // setIsLoading(false);
+    setIsCompletedOnboardingToSessionStorage();
     router.push("/explore");
-  };
-
-  const onError = (error: FieldErrors<OnboardingSchema>) => {
-    console.log(watch());
-    console.log(error);
   };
 
   return (
@@ -58,7 +55,7 @@ export default function OnboardingFooter() {
           stretch
           className="bg-primary-700"
           size="lg"
-          onClick={isLastStep ? handleSubmit(onSubmit, onError) : nextStep}
+          onClick={isLastStep ? handleSubmit(onSubmit) : nextStep}
           disabled={!isValid()}
         >
           NEXT STEP
