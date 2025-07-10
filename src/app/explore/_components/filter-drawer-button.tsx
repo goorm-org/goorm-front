@@ -13,7 +13,13 @@ import {
   updateOnboardingDataToSessionStorage,
 } from "@/app/_utils/session-storage";
 
-export default function FilterDrawerButton() {
+export interface FilterDrawerButtonProps {
+  onApplyFilter: () => void;
+}
+
+export default function FilterDrawerButton({
+  onApplyFilter,
+}: FilterDrawerButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPlaceCategory, setSelectedPlaceCategory] = useState<number[]>(
     []
@@ -26,6 +32,7 @@ export default function FilterDrawerButton() {
       placeCategoryList: selectedPlaceCategory,
     });
     setIsOpen(false);
+    onApplyFilter();
   };
 
   useEffect(() => {

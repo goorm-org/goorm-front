@@ -127,7 +127,7 @@ const useShorts = () => {
     }
   };
 
-  return { data, isLoading, error, handleToggleBookmark };
+  return { data, isLoading, error, handleToggleBookmark, mutate };
 };
 
 export default useShorts;
