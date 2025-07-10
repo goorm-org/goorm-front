@@ -9,3 +9,21 @@ export interface PostOnboardingInfoDTO {
 
 export const postOnboardingInfo = (data: PostOnboardingInfoDTO) =>
   api.post("/onboardings", data);
+
+export interface GetOnboardingInfoResponse {
+  id: number;
+  from: string;
+  to: string;
+  vibeList: number[];
+  placeCategoryList: number[];
+}
+
+export const getOnboardingInfo = () =>
+  api.get<GetOnboardingInfoResponse>("/onboardings");
+
+export interface PatchOnboardingInfoDTO extends Partial<PostOnboardingInfoDTO> {
+  id: number;
+}
+
+export const patchOnboardingInfo = (data: PatchOnboardingInfoDTO) =>
+  api.patch("/onboardings", data);
