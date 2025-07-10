@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { SWRProvider } from "./_providers/swr-provider";
-import { headers } from "next/headers";
 import Navigation from "@/app/_components/navigation";
 
 export const metadata: Metadata = {
@@ -14,15 +13,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") || "";
-
-  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/plan"];
-
-  const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some(
-    (path) => pathname.startsWith(path) || pathname === "/"
-  );
-
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
@@ -35,7 +25,7 @@ export default async function RootLayout({
         <SWRProvider>
           <main className="bg-background-2 max-w-[393px] mx-auto h-dvh">
             {children}
-            {!isExcludeNavigation && <Navigation />}
+            <Navigation />
           </main>
         </SWRProvider>
       </body>

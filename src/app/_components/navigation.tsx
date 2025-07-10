@@ -15,6 +15,14 @@ export default function Navigation() {
       pathname.startsWith(route) ? "text-primary-700" : "text-gray-400";
   }, [pathname]);
 
+  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/plan"];
+
+  const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some(
+    (path) => pathname.startsWith(path) || pathname === "/"
+  );
+
+  if (isExcludeNavigation) return null;
+
   return (
     <nav className="fixed bottom-0 left-1/2 z-10 h-20 max-w-[393px] w-full -translate-x-1/2 bg-white">
       <ul className="flex items-center justify-around h-full">
