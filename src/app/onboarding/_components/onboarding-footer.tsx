@@ -7,6 +7,8 @@ import {
 } from "../_schemas/onboarding_schema";
 import { useRouter } from "next/navigation";
 import { setOnboardingDataToLocalStorage } from "@/app/_utils/filter";
+import { useState } from "react";
+import Loading from "@/app/_components/loading";
 
 // Step별 validation 필드 매핑
 const STEP_VALIDATION_FIELDS = {
@@ -18,6 +20,7 @@ const STEP_VALIDATION_FIELDS = {
 export default function OnboardingFooter() {
   const router = useRouter();
   const { nextStep, step, isLastStep } = useStep();
+  const [isLoading, setIsLoading] = useState(false);
   const { watch, handleSubmit } = useFormContext<OnboardingSchema>();
 
   const isValid = () => {
@@ -34,9 +37,12 @@ export default function OnboardingFooter() {
     return onboardingSchema.pick(pickObject).safeParse(watch()).success;
   };
 
-  const onSubmit = (data: OnboardingSchema) => {
+  const onSubmit = async (data: OnboardingSchema) => {
     console.log(data);
     setOnboardingDataToLocalStorage(data);
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // setIsLoading(false);
     router.push("/explore");
   };
 
@@ -58,6 +64,7 @@ export default function OnboardingFooter() {
           NEXT STEP
         </Button>
       </Card.Footer>
+      {isLoading && <Loading />}
     </Card.Root>
   );
 }
