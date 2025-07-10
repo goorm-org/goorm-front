@@ -84,7 +84,7 @@ export default function Navigation() {
               />
             </svg>
             <span className={clsx("text-xs", setActiveColor("/saved"))}>
-              Explore
+              Saved
             </span>
           </Button>
         </li>
