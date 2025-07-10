@@ -3,12 +3,18 @@
 import { Checkbox } from "@vapor-ui/core";
 import useSavedPlaceList from "../_hooks/useSavedPlaceList";
 import SavedPlaceListItem from "./saved-place-list-item";
-import { useState } from "react";
 import DeleteDialogButton from "./delete-dialog-button";
 
-export default function SavedPlaceList() {
+export interface SavedPlaceListProps {
+  selectedItems: number[];
+  setSelectedItems: (items: number[]) => void;
+}
+
+export default function SavedPlaceList({
+  selectedItems,
+  setSelectedItems,
+}: SavedPlaceListProps) {
   const { data } = useSavedPlaceList();
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   const handleSelectAll = () => {
     if (selectedItems.length === data?.length) {

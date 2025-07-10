@@ -43,23 +43,27 @@ export default function OnboardingFooter() {
   };
 
   const onSubmit = async () => {
-    const data = getValues();
-
-    const body = {
-      vibeList: data.vibeList,
-      placeCategoryList: data.placeCategoryList,
-      from: dayjs(data.departure_date).format("YYYY-MM-DD"),
-      to: dayjs(data.arrival_date).format("YYYY-MM-DD"),
-    };
-    setIsLoading(true);
-    setOnboardingDataToSessionStorage(data);
-    setIsCompletedOnboardingToSessionStorage();
-
-    await postOnboardingInfo(body);
-
-    setTimeout(() => {
+    try {
+      const raw = getValues();
+      const data = { ...raw };
+      const body = {
+        vibeList: [...data.vibeList.map((vibe) => Number(vibe))],
+        placeCategoryList: [
+          ...data.placeCategoryList.map((category) => Number(category)),
+        ],
+        from: dayjs(data.departure_date).format("YYYY-MM-DD"),
+        to: dayjs(data.arrival_date).format("YYYY-MM-DD"),
+      };
+      setOnboardingDataToSessionStorage(data);
+      setIsCompletedOnboardingToSessionStorage();
+      setIsLoading(true);
+      await postOnboardingInfo(body);
+      await new Promise((resolve) => setTimeout(resolve, 2500));
       router.push("/explore");
-    }, 2000);
+    } catch {
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      router.push("/explore");
+    }
   };
 
   return (

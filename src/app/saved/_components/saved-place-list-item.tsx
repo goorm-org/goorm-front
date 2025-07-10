@@ -1,6 +1,5 @@
 import { Badge, Checkbox, CheckboxRootProps } from "@vapor-ui/core";
 import Image from "next/image";
-import PriorityTag from "./priority-tag";
 import clsx from "clsx";
 import { SavedPlace } from "../_apis/saved.interface";
 

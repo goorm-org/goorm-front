@@ -1,5 +1,6 @@
 import CheckboxButtonGroup from "@/app/_components/checkbox-button-group";
 import { Badge, Button, Card } from "@vapor-ui/core";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -7,15 +8,17 @@ export interface SelectTripDateProps {
   startDate: string;
   endDate: string;
   diffDays: number;
+  selectedItems: number[];
 }
 
 export default function SelectTripDate({
   startDate,
   endDate,
   diffDays,
+  selectedItems,
 }: SelectTripDateProps) {
   const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState<string>(startDate);
+  const [selectedDate, setSelectedDate] = useState<number>(0);
 
   return (
     <div>
@@ -33,13 +36,14 @@ export default function SelectTripDate({
         </div>
         <div className="mt-[8px]">
           <CheckboxButtonGroup
+            className="w-full !flex-nowrap overflow-x-auto scrollbar-hide [&::-webkit-scrollbar]:hidden"
             options={Array.from({ length: diffDays + 1 }, (_, i) => ({
               label: `Day${i + 1}`,
-              value: `Day${i + 1}`,
+              value: i,
             }))}
             selectedValues={[selectedDate]}
             onSelect={(value) => {
-              setSelectedDate(value as string);
+              setSelectedDate(value as number);
             }}
           />
         </div>
@@ -52,7 +56,13 @@ export default function SelectTripDate({
             size="xl"
             stretch
             onClick={() => {
-              router.push("/plan");
+              const params = new URLSearchParams();
+              params.set(
+                "date",
+                dayjs(startDate).add(selectedDate, "day").format("YYYY-MM-DD")
+              );
+              params.set("placeIds", selectedItems.join(","));
+              router.push(`/plan?${params.toString()}`);
             }}
           >
             ADD TO PLAN

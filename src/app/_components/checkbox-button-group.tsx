@@ -13,15 +13,17 @@ export interface CheckboxButtonGroupProps {
 
   selectedValues: (number | string)[];
   onSelect: (value: number | string) => void;
+  className?: string;
 }
 
 export default function CheckboxButtonGroup({
   options,
   selectedValues,
   onSelect,
+  className,
 }: CheckboxButtonGroupProps) {
   return (
-    <div className="flex flex-wrap gap-x-[8px] gap-y-[12px]">
+    <div className={clsx("flex flex-wrap gap-x-[8px] gap-y-[12px]", className)}>
       {options.map((option) => (
         <Button
           className={clsx(

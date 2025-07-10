@@ -12,7 +12,13 @@ import SelectTripDate from "./select-trip-date";
 import { OnboardingSchema } from "@/app/onboarding/_schemas/onboarding_schema";
 import dayjs from "dayjs";
 
-export default function AddTripDrawerFloatButton() {
+export interface AddTripDrawerFloatButtonProps {
+  selectedItems: number[];
+}
+
+export default function AddTripDrawerFloatButton({
+  selectedItems,
+}: AddTripDrawerFloatButtonProps) {
   const [isCompletedOnboarding, setIsCompletedOnboarding] = useState(false);
   const [onboardingData, setOnboardingData] = useState<OnboardingSchema | null>(
     null
@@ -73,6 +79,7 @@ export default function AddTripDrawerFloatButton() {
                   dayjs(onboardingData?.departure_date),
                   "day"
                 )}
+                selectedItems={selectedItems}
               />
             ) : (
               <BlankTripPlan />
