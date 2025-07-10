@@ -327,7 +327,7 @@ export const LOCATION_FILTER_OPTIONS = [
   },
 ];
 
-export const PLACE_CATEGORY_LOCATION_FILTER_OPTIONS = [
+export const CATEGORY_FILTER_OPTIONS = [
   {
     label: "Korean",
     value: "Korean",

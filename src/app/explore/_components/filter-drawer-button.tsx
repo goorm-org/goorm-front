@@ -2,18 +2,16 @@
 
 import {
   LOCATION_FILTER_OPTIONS,
-  PLACE_CATEGORY_LOCATION_FILTER_OPTIONS,
+  CATEGORY_FILTER_OPTIONS,
 } from "@/app/_constants/filter";
 import { Button, Card } from "@vapor-ui/core";
 import { Drawer } from "vaul";
 import ShortsFilterGroup from "./shorts-filter-group";
 import { useEffect, useState } from "react";
 import {
-  getOnboardingDataFromLocalStorage,
-  getPlaceFilterDataFromLocalStorage,
-  setPlaceFilterDataToLocalStorage,
-  updateOnboardingDataToLocalStorage,
-} from "@/app/_utils/filter";
+  getOnboardingDataFromSessionStorage,
+  updateOnboardingDataToSessionStorage,
+} from "@/app/_utils/session-storage";
 
 export default function FilterDrawerButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,20 +21,20 @@ export default function FilterDrawerButton() {
   const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
 
   const onClickApplyFilter = () => {
-    updateOnboardingDataToLocalStorage({
-      filter_options: selectedLocation,
+    updateOnboardingDataToSessionStorage({
+      location_filter_options: selectedLocation,
+      category_filter_options: selectedPlaceCategory,
     });
-    setPlaceFilterDataToLocalStorage(selectedPlaceCategory);
     setIsOpen(false);
   };
 
   useEffect(() => {
     if (!isOpen) return;
-    const onboardingData = getOnboardingDataFromLocalStorage();
-    const placeFilterData = getPlaceFilterDataFromLocalStorage();
-    console.log(placeFilterData);
-    if (onboardingData) setSelectedLocation(onboardingData.filter_options);
-    if (placeFilterData) setSelectedPlaceCategory(placeFilterData);
+    const onboardingData = getOnboardingDataFromSessionStorage();
+    if (onboardingData) {
+      setSelectedLocation(onboardingData.location_filter_options);
+      setSelectedPlaceCategory(onboardingData.category_filter_options);
+    }
   }, [isOpen]);
 
   return (
@@ -76,7 +74,7 @@ export default function FilterDrawerButton() {
             <div>
               <ShortsFilterGroup
                 title="Place Category"
-                options={PLACE_CATEGORY_LOCATION_FILTER_OPTIONS}
+                options={CATEGORY_FILTER_OPTIONS}
                 selectedValues={selectedPlaceCategory}
                 onSelect={(value) => {
                   if (selectedPlaceCategory.includes(value)) {

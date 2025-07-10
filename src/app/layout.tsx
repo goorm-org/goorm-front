@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SWRProvider } from "./_providers/swr-provider";
-import clsx from "clsx";
 import { headers } from "next/headers";
 import "./globals.css";
 import "@vapor-ui/core/styles.css";
@@ -20,9 +19,10 @@ export default async function RootLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
-  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/landing", "/plan"];
-  const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some((path) =>
-    pathname.startsWith(path)
+  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/plan", "/saved"];
+
+  const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some(
+    (path) => pathname.startsWith(path) || pathname === "/"
   );
 
   return (

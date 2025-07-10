@@ -2,8 +2,13 @@
 
 import { Button, Card } from "@vapor-ui/core";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LandingFooter() {
+  const router = useRouter();
+  const onClickSkip = () => {
+    router.push("/map");
+  };
   return (
     <Card.Root className="bg-transparent border-none">
       <Card.Footer className="flex flex-col gap-[8px]">
@@ -17,6 +22,7 @@ export default function LandingFooter() {
           size="lg"
           variant="ghost"
           className="text-black underline"
+          onClick={onClickSkip}
         >
           SKIP
         </Button>
