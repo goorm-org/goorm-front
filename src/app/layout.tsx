@@ -19,9 +19,10 @@ export default async function RootLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
-  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/landing", "/plan"];
-  const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some((path) =>
-    pathname.startsWith(path)
+  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/plan"];
+
+  const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some(
+    (path) => pathname.startsWith(path) || pathname === "/"
   );
 
   return (

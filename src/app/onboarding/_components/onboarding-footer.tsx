@@ -1,20 +1,23 @@
 import { Button, Card } from "@vapor-ui/core";
 import useStep from "../_hooks/useStep";
-import { FieldErrors, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import {
   onboardingSchema,
   OnboardingSchema,
 } from "../_schemas/onboarding_schema";
 import { useRouter } from "next/navigation";
-import { setOnboardingDataToLocalStorage } from "@/app/_utils/filter";
+import {
+  setIsCompletedOnboardingToSessionStorage,
+  setOnboardingDataToSessionStorage,
+} from "@/app/_utils/session-storage";
 import { useState } from "react";
 import Loading from "@/app/_components/loading";
 
 // Step별 validation 필드 매핑
 const STEP_VALIDATION_FIELDS = {
   "1": ["departure_date", "arrival_date"] as const,
-  "2": ["traveling_with"] as const,
-  "3": ["filter_options"] as const,
+  "2": ["category_filter_options"] as const,
+  "3": ["location_filter_options"] as const,
 } as const;
 
 export default function OnboardingFooter() {
@@ -38,17 +41,11 @@ export default function OnboardingFooter() {
   };
 
   const onSubmit = async (data: OnboardingSchema) => {
-    console.log(data);
-    setOnboardingDataToLocalStorage(data);
+    setOnboardingDataToSessionStorage(data);
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    // setIsLoading(false);
+    setIsCompletedOnboardingToSessionStorage();
     router.push("/explore");
-  };
-
-  const onError = (error: FieldErrors<OnboardingSchema>) => {
-    console.log(watch());
-    console.log(error);
   };
 
   return (
@@ -58,7 +55,7 @@ export default function OnboardingFooter() {
           stretch
           className="bg-primary-700"
           size="lg"
-          onClick={isLastStep ? handleSubmit(onSubmit, onError) : nextStep}
+          onClick={isLastStep ? handleSubmit(onSubmit) : nextStep}
           disabled={!isValid()}
         >
           NEXT STEP
