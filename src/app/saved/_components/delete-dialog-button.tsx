@@ -1,8 +1,10 @@
 import { Button, Dialog } from "@vapor-ui/core";
+import { useState } from "react";
 
 export default function DeleteDialogButton() {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dialog.Root>
+    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Overlay className="z-50" />
       <Dialog.Trigger asChild>
         <Button size="sm" variant="ghost" className="text-primary-700">
@@ -14,15 +16,17 @@ export default function DeleteDialogButton() {
           <Dialog.Title>Are you sure delete?</Dialog.Title>
         </Dialog.Header>
         <Dialog.Body>This action cannot be undone.</Dialog.Body>
-        <Dialog.Footer className="mt-[24px]">
-          <Button
-            size="lg"
-            stretch
-            variant="ghost"
-            className="text-black bg-[#F7F7FA]"
-          >
-            Cancel
-          </Button>
+        <Dialog.Footer className="mt-[24px] flex gap-[8px]">
+          <Dialog.Close asChild>
+            <Button
+              size="lg"
+              stretch
+              variant="ghost"
+              className="text-black bg-[#F7F7FA]"
+            >
+              Cancel
+            </Button>
+          </Dialog.Close>
           <Button
             size="lg"
             stretch
