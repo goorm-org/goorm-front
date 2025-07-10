@@ -8,7 +8,7 @@ import { OnboardingSchema } from "../../_schemas/onboarding_schema";
 
 export default function Step02() {
   const { watch, setValue } = useFormContext<OnboardingSchema>();
-  const filterOptions = watch("category_filter_options");
+  const filterOptions = watch("placeCategoryList");
   return (
     <div className="px-[24px] mt-[8px]">
       <div className="flex flex-col gap-[48px]">
@@ -20,13 +20,13 @@ export default function Step02() {
           options={CATEGORY_FILTER_OPTIONS}
           selectedValues={filterOptions}
           onSelect={(value) => {
-            if (filterOptions.includes(value)) {
+            if (filterOptions.includes(Number(value))) {
               setValue(
-                "category_filter_options",
+                "placeCategoryList",
                 filterOptions.filter((v) => v !== value)
               );
             } else {
-              setValue("category_filter_options", [...filterOptions, value]);
+              setValue("placeCategoryList", [...filterOptions, Number(value)]);
             }
           }}
         />

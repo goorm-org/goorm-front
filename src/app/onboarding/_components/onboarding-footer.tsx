@@ -12,12 +12,14 @@ import {
 } from "@/app/_utils/session-storage";
 import { useState } from "react";
 import Loading from "@/app/_components/loading";
+import { postOnboardingInfo } from "../_apis/onboarding.api";
+import dayjs from "dayjs";
 
 // Step별 validation 필드 매핑
 const STEP_VALIDATION_FIELDS = {
   "1": ["departure_date", "arrival_date"] as const,
-  "2": ["category_filter_options"] as const,
-  "3": ["location_filter_options"] as const,
+  "2": ["placeCategoryList"] as const,
+  "3": ["vibeList"] as const,
 } as const;
 
 export default function OnboardingFooter() {
@@ -43,7 +45,12 @@ export default function OnboardingFooter() {
   const onSubmit = async (data: OnboardingSchema) => {
     setOnboardingDataToSessionStorage(data);
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await postOnboardingInfo({
+      vibeList: data.vibeList,
+      placeCategoryList: data.placeCategoryList,
+      from: dayjs(data.departure_date).format("YYYY-MM-DD"),
+      to: dayjs(data.arrival_date).format("YYYY-MM-DD"),
+    });
     setIsCompletedOnboardingToSessionStorage();
     router.push("/explore");
   };

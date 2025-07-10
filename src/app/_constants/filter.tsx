@@ -1,7 +1,7 @@
 export const LOCATION_FILTER_OPTIONS = [
   {
     label: "Forest & Trails",
-    value: "Forest & Trails",
+    value: 1,
     icon: {
       active: (
         <svg
@@ -47,7 +47,7 @@ export const LOCATION_FILTER_OPTIONS = [
   },
   {
     label: "Sunset Coast",
-    value: "Sunset Coast",
+    value: 2,
     icon: {
       active: (
         <svg
@@ -160,7 +160,7 @@ export const LOCATION_FILTER_OPTIONS = [
   },
   {
     label: "Quiet East",
-    value: "Quiet East",
+    value: 3,
     icon: {
       active: (
         <svg
@@ -200,7 +200,7 @@ export const LOCATION_FILTER_OPTIONS = [
   },
   {
     label: "Local culture",
-    value: "Local culture",
+    value: 4,
     icon: {
       active: (
         <svg
@@ -284,7 +284,7 @@ export const LOCATION_FILTER_OPTIONS = [
   },
   {
     label: "Volcano & Views",
-    value: "Volcano & Views",
+    value: 5,
     icon: {
       active: (
         <svg
@@ -330,38 +330,38 @@ export const LOCATION_FILTER_OPTIONS = [
 export const CATEGORY_FILTER_OPTIONS = [
   {
     label: "Korean",
-    value: "Korean",
+    value: 1,
   },
   {
     label: "Asian (Other)",
-    value: "Asian (Other)",
+    value: 2,
   },
   {
     label: "European",
-    value: "European",
+    value: 3,
   },
   {
     label: "American",
-    value: "American",
+    value: 4,
   },
   {
     label: "Latin American",
-    value: "Latin American",
+    value: 5,
   },
   {
     label: "African",
-    value: "African",
+    value: 6,
   },
   {
     label: "Café",
-    value: "Café",
+    value: 7,
   },
   {
     label: "Buffet",
-    value: "Buffet",
+    value: 8,
   },
   {
     label: "Fast Food",
-    value: "Fast Food",
+    value: 9,
   },
 ];

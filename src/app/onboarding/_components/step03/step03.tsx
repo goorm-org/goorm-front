@@ -6,7 +6,7 @@ import { OnboardingSchema } from "../../_schemas/onboarding_schema";
 
 export default function Step03() {
   const { watch, setValue } = useFormContext<OnboardingSchema>();
-  const filterOptions = watch("location_filter_options");
+  const filterOptions = watch("vibeList");
   return (
     <div className="px-[24px] mt-[8px]">
       <div className="flex flex-col gap-[48px]">
@@ -18,13 +18,13 @@ export default function Step03() {
           options={LOCATION_FILTER_OPTIONS}
           selectedValues={filterOptions}
           onSelect={(value) => {
-            if (filterOptions.includes(value)) {
+            if (filterOptions.includes(Number(value))) {
               setValue(
-                "location_filter_options",
+                "vibeList",
                 filterOptions.filter((v) => v !== value)
               );
             } else {
-              setValue("location_filter_options", [...filterOptions, value]);
+              setValue("vibeList", [...filterOptions, Number(value)]);
             }
           }}
         />

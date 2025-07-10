@@ -1,10 +1,12 @@
 @layer theme, vapor-theme, base, vapor-reset, vapor-component, vapor-utilities, utilities;
 
-@import "@vapor-ui/core/styles.css";
 
 @import "tw-animate-css";
 
 @import "tailwindcss";
+
+@import "@vapor-ui/core/styles.css";
+
 
 @custom-variant dark (&:is(.dark *));
 

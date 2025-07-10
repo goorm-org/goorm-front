@@ -15,15 +15,15 @@ import {
 
 export default function FilterDrawerButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedPlaceCategory, setSelectedPlaceCategory] = useState<string[]>(
+  const [selectedPlaceCategory, setSelectedPlaceCategory] = useState<number[]>(
     []
   );
-  const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<number[]>([]);
 
   const onClickApplyFilter = () => {
     updateOnboardingDataToSessionStorage({
-      location_filter_options: selectedLocation,
-      category_filter_options: selectedPlaceCategory,
+      vibeList: selectedLocation,
+      placeCategoryList: selectedPlaceCategory,
     });
     setIsOpen(false);
   };
@@ -32,8 +32,8 @@ export default function FilterDrawerButton() {
     if (!isOpen) return;
     const onboardingData = getOnboardingDataFromSessionStorage();
     if (onboardingData) {
-      setSelectedLocation(onboardingData.location_filter_options);
-      setSelectedPlaceCategory(onboardingData.category_filter_options);
+      setSelectedLocation(onboardingData.vibeList);
+      setSelectedPlaceCategory(onboardingData.placeCategoryList);
     }
   }, [isOpen]);
 
@@ -77,12 +77,15 @@ export default function FilterDrawerButton() {
                 options={CATEGORY_FILTER_OPTIONS}
                 selectedValues={selectedPlaceCategory}
                 onSelect={(value) => {
-                  if (selectedPlaceCategory.includes(value)) {
+                  if (selectedPlaceCategory.includes(Number(value))) {
                     setSelectedPlaceCategory(
                       selectedPlaceCategory.filter((v) => v !== value)
                     );
                   } else {
-                    setSelectedPlaceCategory([...selectedPlaceCategory, value]);
+                    setSelectedPlaceCategory([
+                      ...selectedPlaceCategory,
+                      Number(value),
+                    ]);
                   }
                 }}
               />
@@ -92,12 +95,12 @@ export default function FilterDrawerButton() {
                 options={LOCATION_FILTER_OPTIONS}
                 selectedValues={selectedLocation}
                 onSelect={(value) => {
-                  if (selectedLocation.includes(value)) {
+                  if (selectedLocation.includes(Number(value))) {
                     setSelectedLocation(
                       selectedLocation.filter((v) => v !== value)
                     );
                   } else {
-                    setSelectedLocation([...selectedLocation, value]);
+                    setSelectedLocation([...selectedLocation, Number(value)]);
                   }
                 }}
               />

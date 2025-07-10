@@ -38,7 +38,9 @@ export default function SelectTripDate({
               value: `Day${i + 1}`,
             }))}
             selectedValues={[selectedDate]}
-            onSelect={setSelectedDate}
+            onSelect={(value) => {
+              setSelectedDate(value as string);
+            }}
           />
         </div>
       </div>

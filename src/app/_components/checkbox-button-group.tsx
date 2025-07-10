@@ -4,15 +4,15 @@ import clsx from "clsx";
 export interface CheckboxButtonGroupProps {
   options: {
     label: string;
-    value: string;
+    value: number | string;
     icon?: {
       active: React.ReactNode;
       inactive: React.ReactNode;
     };
   }[];
 
-  selectedValues: string[];
-  onSelect: (value: string) => void;
+  selectedValues: (number | string)[];
+  onSelect: (value: number | string) => void;
 }
 
 export default function CheckboxButtonGroup({
