@@ -196,7 +196,7 @@ export default function Map() {
     } catch (error) {
       console.error("지도 초기화 실패:", error);
     }
-  }, [isLoaded, width, height, zoom, CENTER_LAT, CENTER_LNG, locations]);
+  }, [isLoaded, width, height, zoom, CENTER_LAT, CENTER_LNG]); // locations 제거
 
   // 주소를 좌표로 변환하는 함수
   const geocodeAddress = async (
@@ -353,7 +353,7 @@ export default function Map() {
     };
     processlocations();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, locations]);
+  }, [map, locations.length]); // locations.length만 의존성으로 사용
 
   // 지도 클릭 시 모든 인포윈도우 닫기
   useEffect(() => {
