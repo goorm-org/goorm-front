@@ -4,7 +4,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useId } from "react";
-import { MapLocation } from "@/app/map/_types/tmap";
+import { MapLocation } from "@/app/map/_types/map";
 
 export default function PlanMap({
   width,

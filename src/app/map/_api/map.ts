@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { api } from "@/lib/api/client";
+import { ShortsData } from "@/app/map/_types/map";
 
-export const getShortsList = (): Promise<any> => {
-  return api.get("/shorts");
+export const getShortsList = () => {
+  return api.get<ShortsData[]>("/shorts");
 };

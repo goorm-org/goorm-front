@@ -1,29 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState, useId } from "react";
-import { MapLocation } from "@/app/map/_types/tmap";
+import { ShortsData } from "@/app/map/_types/map";
 import { Drawer } from "vaul";
 import useSWR from "swr";
 import { getShortsList } from "./_api/map";
 import PlaceBottomSheets from "@/app/_components/place-bottom-sheets";
 
 export default function Map() {
-  // const { data } = useSWR("getShortsList", getShortsList);
-  // if (data) console.log("data", data);
+  const { data } = useSWR("getShortsList", getShortsList);
 
   const mapRef = useRef<HTMLDivElement>(null);
   const mapId = useId();
 
+  const [locations, setLocations] = useState<ShortsData[]>([]);
   const [map, setMap] = useState<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [markers, setMarkers] = useState<any[]>([]);
   const [infoWindows, setInfoWindows] = useState<any[]>([]);
-  const [snap, setSnap] = useState<number | string | null>("320px");
+  const [snap, setSnap] = useState<number | string | null>("348px");
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  useEffect(() => {
-    console.log("snapsnapsnap", snap);
-  }, [snap]);
+  const [selectedLocation, setSelectedLocation] = useState<ShortsData | null>(
+    null
+  );
 
   // 임시 key (public)
   const APP_KEY = "2yslOxH45B2vlzRTsn7jc4XXChspjnwF2Rz5YThT";
@@ -31,22 +30,6 @@ export default function Map() {
   const width = "100%";
   const height = "calc(100dvh - 80px)";
   const zoom = 10;
-  const locations = [
-    {
-      lat: 33.452651,
-      lng: 126.92461,
-      address: "서귀포시 성산읍 고성리 224-33",
-      description: "광치기해변",
-      category: "forest",
-    },
-    {
-      lat: 33.450206,
-      lng: 126.918408,
-      address: "서귀포시 성산읍 동류암로 20",
-      description: "플레이스 캠프 제주",
-      category: "sunset",
-    },
-  ];
 
   const markerIconsMap = {
     forest:
@@ -59,10 +42,22 @@ export default function Map() {
       "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/sunset.svg",
     beach:
       "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/volcano.svg",
+    cafe: "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/local.svg",
+    restaurant:
+      "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/local.svg",
+    shopping:
+      "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/local.svg",
   };
 
-  const CENTER_LAT = locations[1]?.lat || 33.450233;
-  const CENTER_LNG = locations[1]?.lng || 126.918494;
+  const CENTER_LAT = Number(locations?.[0]?.latitude) || 33.450233;
+  const CENTER_LNG = Number(locations?.[0]?.longitude) || 126.918494;
+
+  // api
+  useEffect(() => {
+    if (data?.data) {
+      setLocations(data.data);
+    }
+  }, [data]);
 
   // 티맵 스크립트 로드
   useEffect(() => {
@@ -133,11 +128,15 @@ export default function Map() {
 
   // 지도 초기화
   useEffect(() => {
-    if (!isLoaded || !mapRef.current) return;
+    if (!isLoaded || !mapRef.current || !locations || locations.length === 0) {
+      return;
+    }
+
     if (!window.Tmapv2 || typeof window.Tmapv2.Map !== "function") {
       console.error("Tmapv2.Map이 사용 가능하지 않습니다.");
       return;
     }
+
     try {
       const tmapInstance = new window.Tmapv2.Map(`tmap-${mapId}`, {
         center: new window.Tmapv2.LatLng(CENTER_LAT, CENTER_LNG),
@@ -151,7 +150,7 @@ export default function Map() {
     } catch (error) {
       console.error("지도 초기화 실패:", error);
     }
-  }, [isLoaded, width, height, zoom, CENTER_LAT, CENTER_LNG]);
+  }, [isLoaded, width, height, zoom, CENTER_LAT, CENTER_LNG, locations]);
 
   // 주소를 좌표로 변환하는 함수
   const geocodeAddress = async (
@@ -189,7 +188,10 @@ export default function Map() {
 
   // 마커와 인포윈도우 생성
   useEffect(() => {
-    if (!map || !window.Tmapv2 || locations.length < 2) return;
+    if (!map || !window.Tmapv2 || !locations || locations.length === 0) {
+      return;
+    }
+
     const requiredClasses = [
       "LatLngBounds",
       "LatLng",
@@ -206,6 +208,7 @@ export default function Map() {
         return;
       }
     }
+
     const processlocations = async () => {
       // 기존 마커들 제거
       markers.forEach((marker) => {
@@ -231,10 +234,11 @@ export default function Map() {
         const bounds = new window.Tmapv2.LatLngBounds();
         for (let i = 0; i < locations.length; i++) {
           const location = locations[i];
-          let lat = location.lat;
-          let lng = location.lng;
 
-          if (!lat || !lng) {
+          let lat = parseFloat(location.latitude);
+          let lng = parseFloat(location.longitude);
+
+          if (isNaN(lat) || isNaN(lng)) {
             const coords = await geocodeAddress(location.address);
             if (coords) {
               lat = coords.lat;
@@ -251,25 +255,32 @@ export default function Map() {
             const position = new window.Tmapv2.LatLng(lat, lng);
             bounds.extend(position);
 
+            // 마커 아이콘 URL 확인
+            const iconUrl =
+              markerIconsMap[
+                location.categoryHigh as keyof typeof markerIconsMap
+              ] || markerIconsMap.local;
+
             // 마커 생성
             const marker = new window.Tmapv2.Marker({
               position,
               map,
-              // TODO: api 나오면 맞춰서 수정
-              icon: markerIconsMap[
-                locations[i]?.category as keyof typeof markerIconsMap
-              ],
+              icon: iconUrl,
               iconSize: new window.Tmapv2.Size(38, 31),
             });
 
+            // 마커에 고유 ID 추가
+            (marker as any).id = `marker-${location.id}-${i}`;
+
             // 마커 클릭 이벤트
             marker.addListener("click", () => {
-              setSnap("320px");
+              setSnap("348px");
               setDrawerOpen(true);
+              setSelectedLocation(location);
             });
             newMarkers.push(marker);
           } catch (error) {
-            console.error(`마커 생성 실패 (${location.description}):`, error);
+            console.error(`마커 생성 실패 (${location.title}):`, error);
           }
         }
 
@@ -296,7 +307,7 @@ export default function Map() {
     };
     processlocations();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map]);
+  }, [map, locations]);
 
   // 지도 클릭 시 모든 인포윈도우 닫기
   useEffect(() => {
@@ -320,21 +331,22 @@ export default function Map() {
         </div>
       )}
       <div ref={mapRef} id={`tmap-${mapId}`} style={{ width, height }} />
-      {locations.length === 0 && isLoaded && (
+      {locations?.length === 0 && isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-90 rounded-lg">
           <p className="text-gray-500">표시할 위치가 없습니다.</p>
         </div>
       )}
+
       {/* place info bottom sheets */}
       <Drawer.Root
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
-        snapPoints={["320px", 1]}
+        snapPoints={["348px", 1]}
         activeSnapPoint={snap}
         setActiveSnapPoint={setSnap}
       >
         <Drawer.Portal>
-          <PlaceBottomSheets snap={snap} />
+          <PlaceBottomSheets snap={snap} location={selectedLocation} />
         </Drawer.Portal>
       </Drawer.Root>
     </div>

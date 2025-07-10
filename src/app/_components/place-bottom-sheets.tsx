@@ -18,6 +18,13 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { ShortsData } from "@/app/map/_types/map";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 ChartJS.register(
   CategoryScale,
@@ -31,10 +38,28 @@ ChartJS.register(
 
 export default function PlaceBottomSheets({
   snap,
+  location,
 }: {
   snap: number | string | null;
+  location: ShortsData | null;
 }) {
   const borderStyle = "border-[#E5E5EA] my-4 w-full";
+
+  // 유튜브 URL에서 비디오 ID 추출
+  const getYouTubeVideoId = (url: string) => {
+    const videoIdMatch = url.match(
+      /(?:youtube\.com\/shorts\/|youtu\.be\/|youtube\.com\/watch\?v=)([^&\n?#]+)/
+    );
+    return videoIdMatch ? videoIdMatch[1] : null;
+  };
+
+  // 유튜브 썸네일 URL 생성
+  const getYouTubeThumbnail = (url: string) => {
+    const videoId = getYouTubeVideoId(url);
+    if (!videoId) return IcoBookmarkBefore; // 기본 이미지로 fallback
+
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  };
 
   const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const datapoints = [12, 18, 20, 10, 8, 12, 18];
@@ -81,6 +106,46 @@ export default function PlaceBottomSheets({
     },
   };
 
+  const checkIsOpen = (openingHours: string[]) => {
+    if (!openingHours || openingHours.length === 0) return false;
+
+    const now = dayjs().tz("Asia/Seoul");
+    const currentTime = now.format("HH:mm");
+    const currentDay = now.day(); // 0: 일요일, 1: 월요일, ...
+
+    // 첫 번째 영업시간 사용 (예: "08:00-21:00")
+    const hours = openingHours[0];
+    const [openTime, closeTime] = hours.split("-");
+
+    // 현재 시간이 영업시간 내에 있는지 확인
+    const isOpen = currentTime >= openTime && currentTime <= closeTime;
+
+    return isOpen;
+  };
+
+  const getOpenStatus = (openingHours: string[]) => {
+    if (!openingHours || openingHours.length === 0) {
+      return { isOpen: false, status: "영업시간 정보 없음" };
+    }
+
+    const now = dayjs().tz("Asia/Seoul");
+    const currentTime = now.format("HH:mm");
+    const hours = openingHours[0];
+    const [openTime, closeTime] = hours.split("-");
+
+    const isOpen = currentTime >= openTime && currentTime <= closeTime;
+
+    return {
+      isOpen,
+      status: isOpen ? "Open" : "Closed",
+      currentTime,
+      openTime,
+      closeTime,
+    };
+  };
+
+  const isOpen = checkIsOpen(location?.openingHours ?? []);
+
   return (
     <Drawer.Content
       data-testid="content"
@@ -101,18 +166,26 @@ export default function PlaceBottomSheets({
       >
         <div className="flex items-center gap-3 px-4">
           <Image
-            // TODO src 임시 이미지
-            src={IcoBookmarkBefore}
+            src={
+              location?.shortsUrl
+                ? getYouTubeThumbnail(location.shortsUrl)
+                : IcoBookmarkBefore
+            }
             alt="place image"
             width={120}
             height={120}
-            className="border-primary-700 border-2 rounded-full"
+            className="border-primary-700 border-2 w-30 h-30 rounded-full object-cover"
+            onError={(e) => {
+              // 썸네일 로드 실패 시 기본 이미지로 fallback
+              const target = e.target as HTMLImageElement;
+              target.src = IcoBookmarkBefore;
+            }}
           />
           <ul className="flex flex-col gap-1 w-full">
             <li>
               <div className="flex items-center justify-between">
-                <Drawer.Title className="text-2xl text-gray-900 font-bold">
-                  $PLACE_NAME$
+                <Drawer.Title className="text-2xl text-gray-900 font-bold w-8/10 overflow-hidden text-ellipsis whitespace-nowrap">
+                  {location?.title || "장소명"}
                 </Drawer.Title>
                 {/* TODO 임시 props */}
                 <Bookmark isLiked={false} />
@@ -123,15 +196,19 @@ export default function PlaceBottomSheets({
                 shape="pill"
                 className="p-2 bg-primary-50 text-primary-700"
               >
-                CAFE
+                {location?.categoryHigh?.toUpperCase()}
               </Badge>
-              <span className="mx-1 text-gray-400 text-lg">·</span>
-              <Badge
-                shape="pill"
-                className="p-1 bg-primary-50 text-primary-700"
-              >
-                NATURE
-              </Badge>
+              {location?.categoryMiddle?.[0] && (
+                <>
+                  <span className="mx-1 text-gray-400 text-lg">·</span>
+                  <Badge
+                    shape="pill"
+                    className="p-1 bg-primary-50 text-primary-700"
+                  >
+                    {location.categoryMiddle[0].toUpperCase()}
+                  </Badge>
+                </>
+              )}
             </li>
             <li className="flex gap-6">
               <div className="flex items-center">
@@ -147,7 +224,10 @@ export default function PlaceBottomSheets({
                     fill="black"
                   />
                 </svg>
-                <span className="text-xs">3~</span>
+                <span className="text-xs">
+                  {location?.pricePerPerson?.[0] || 0}~
+                  {location?.pricePerPerson?.[1] || 0}
+                </span>
               </div>
               <div className="flex items-center">
                 <svg
@@ -174,7 +254,9 @@ export default function PlaceBottomSheets({
                     </clipPath>
                   </defs>
                 </svg>
-                <span className="text-xs">10min</span>
+                <span className="text-xs">
+                  {location?.averageRating || "0"}
+                </span>
               </div>
             </li>
             <li className="flex gap-1 items-center">
@@ -190,7 +272,9 @@ export default function PlaceBottomSheets({
                   fill="black"
                 />
               </svg>
-              <span className="text-xs">09:00 - 21:00</span>
+              <span className="text-xs">
+                {location?.openingHours?.[0] || "no opening hours"}
+              </span>
             </li>
           </ul>
         </div>
@@ -198,7 +282,10 @@ export default function PlaceBottomSheets({
         <hr className={borderStyle} />
 
         <div className="flex flex-row gap-x-2 px-4">
-          <Button className="w-1/2 h-12 flex items-center justify-center gap-2 bg-primary-700">
+          <a
+            href={`tel:${location?.phoneNumber}`}
+            className="w-1/2 h-12 flex items-center justify-center gap-2 bg-primary-700 text-white rounded-md"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="25"
@@ -213,8 +300,13 @@ export default function PlaceBottomSheets({
             </svg>
 
             <span>CALL</span>
-          </Button>
-          <Button className="w-1/2 h-12 flex items-center justify-center gap-2 bg-primary-700">
+          </a>
+          <a
+            href={`https://www.google.com/maps?q=${location?.address?.trim()}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-1/2 h-12 flex items-center justify-center gap-2 bg-primary-700 rounded-md text-white"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="25"
@@ -240,7 +332,7 @@ export default function PlaceBottomSheets({
               </defs>
             </svg>
             <span>DIRECTIONS</span>
-          </Button>
+          </a>
         </div>
 
         <hr className={borderStyle} />
@@ -280,9 +372,13 @@ export default function PlaceBottomSheets({
               fill="black"
             />
           </svg>
-          <span className="text-xs font-bold text-primary-700">Closed</span>
+          <span className="text-xs font-bold text-primary-700">
+            {isOpen ? "Open" : "Closed"}
+          </span>
           <span className="text-gray-400 text-lg">·</span>
-          <span className="text-xs">Opens 9 AM Thu</span>
+          <span className="text-xs">
+            Opens {location?.openingHours?.[0].split("-")?.[0]}
+          </span>
         </div>
 
         <hr className={borderStyle} />
@@ -301,7 +397,10 @@ export default function PlaceBottomSheets({
               fill="black"
             />
           </svg>
-          <span className="text-xs">10,000-20,000 per person</span>
+          <span className="text-xs">
+            {location?.pricePerPerson?.[0] ?? 0}-
+            {location?.pricePerPerson?.[1] ?? 0} per person
+          </span>
         </div>
 
         <hr className={borderStyle} />
@@ -321,12 +420,12 @@ export default function PlaceBottomSheets({
             />
           </svg>
           <Link
-            href="#"
+            href={location?.shortsUrl ?? "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs"
           >
-            instagram.com
+            youtube.com
           </Link>
         </div>
 
