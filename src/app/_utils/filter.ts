@@ -1,46 +1,46 @@
 import {
   ONBOARDING_DATA_KEY,
   PLACE_FILTER_DATA_KEY,
-} from "../_constants/local-storage-key";
+} from "../_constants/session-storage-key";
 import { OnboardingSchema } from "../onboarding/_schemas/onboarding_schema";
 
 /** onboarding data */
-export const getOnboardingDataFromLocalStorage = () => {
-  const filterData = localStorage.getItem(ONBOARDING_DATA_KEY);
+export const getOnboardingDataFromSessionStorage = () => {
+  const filterData = sessionStorage.getItem(ONBOARDING_DATA_KEY);
   return filterData ? (JSON.parse(filterData) as OnboardingSchema) : null;
 };
 
-export const setOnboardingDataToLocalStorage = (data: OnboardingSchema) => {
-  localStorage.setItem(ONBOARDING_DATA_KEY, JSON.stringify(data));
+export const setOnboardingDataToSessionStorage = (data: OnboardingSchema) => {
+  sessionStorage.setItem(ONBOARDING_DATA_KEY, JSON.stringify(data));
 };
 
-export const updateOnboardingDataToLocalStorage = (
+export const updateOnboardingDataToSessionStorage = (
   data: Partial<OnboardingSchema>
 ) => {
-  const prevFilterData = getOnboardingDataFromLocalStorage();
+  const prevFilterData = getOnboardingDataFromSessionStorage();
   if (!prevFilterData) return;
-  localStorage.setItem(
+  sessionStorage.setItem(
     ONBOARDING_DATA_KEY,
     JSON.stringify({ ...prevFilterData, ...data })
   );
 };
 
 /** place filter data */
-export const getPlaceFilterDataFromLocalStorage = () => {
-  const filterData = localStorage.getItem(PLACE_FILTER_DATA_KEY);
+export const getPlaceFilterDataFromSessionStorage = () => {
+  const filterData = sessionStorage.getItem(PLACE_FILTER_DATA_KEY);
   return filterData ? (JSON.parse(filterData) as string[]) : null;
 };
 
-export const setPlaceFilterDataToLocalStorage = (data: string[]) => {
-  localStorage.setItem(PLACE_FILTER_DATA_KEY, JSON.stringify(data));
+export const setPlaceFilterDataToSessionStorage = (data: string[]) => {
+  sessionStorage.setItem(PLACE_FILTER_DATA_KEY, JSON.stringify(data));
 };
 
-export const updatePlaceFilterDataToLocalStorage = (
+export const updatePlaceFilterDataToSessionStorage = (
   data: Partial<string[]>
 ) => {
-  const prevFilterData = getPlaceFilterDataFromLocalStorage();
+  const prevFilterData = getPlaceFilterDataFromSessionStorage();
   if (!prevFilterData) return;
-  localStorage.setItem(
+  sessionStorage.setItem(
     PLACE_FILTER_DATA_KEY,
     JSON.stringify({ ...prevFilterData, ...data })
   );

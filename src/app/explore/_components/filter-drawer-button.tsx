@@ -9,8 +9,8 @@ import { Drawer } from "vaul";
 import ShortsFilterGroup from "./shorts-filter-group";
 import { useEffect, useState } from "react";
 import {
-  getOnboardingDataFromLocalStorage,
-  updateOnboardingDataToLocalStorage,
+  getOnboardingDataFromSessionStorage,
+  updateOnboardingDataToSessionStorage,
 } from "@/app/_utils/filter";
 
 export default function FilterDrawerButton() {
@@ -21,7 +21,7 @@ export default function FilterDrawerButton() {
   const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
 
   const onClickApplyFilter = () => {
-    updateOnboardingDataToLocalStorage({
+    updateOnboardingDataToSessionStorage({
       location_filter_options: selectedLocation,
       category_filter_options: selectedPlaceCategory,
     });
@@ -30,7 +30,7 @@ export default function FilterDrawerButton() {
 
   useEffect(() => {
     if (!isOpen) return;
-    const onboardingData = getOnboardingDataFromLocalStorage();
+    const onboardingData = getOnboardingDataFromSessionStorage();
     if (onboardingData) {
       setSelectedLocation(onboardingData.location_filter_options);
       setSelectedPlaceCategory(onboardingData.category_filter_options);

@@ -6,7 +6,7 @@ import {
   OnboardingSchema,
 } from "../_schemas/onboarding_schema";
 import { useRouter } from "next/navigation";
-import { setOnboardingDataToLocalStorage } from "@/app/_utils/filter";
+import { setOnboardingDataToSessionStorage } from "@/app/_utils/filter";
 import { useState } from "react";
 import Loading from "@/app/_components/loading";
 
@@ -39,7 +39,7 @@ export default function OnboardingFooter() {
 
   const onSubmit = async (data: OnboardingSchema) => {
     console.log(data);
-    setOnboardingDataToLocalStorage(data);
+    setOnboardingDataToSessionStorage(data);
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     // setIsLoading(false);
