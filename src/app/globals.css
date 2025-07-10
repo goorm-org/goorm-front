@@ -1,4 +1,5 @@
 @layer theme, vapor-theme, base, vapor-reset, vapor-component, vapor-utilities, utilities;
+
 @import "@vapor-ui/core/styles.css";
 
 @import "tw-animate-css";
@@ -184,4 +185,12 @@
     background-color: var(--color-primary-600) !important;
     border-color: var(--color-primary-600) !important;
   }
+}
+
+.scroll-hidden {
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE 10+ */
+  -ms-overflow-style: none;
+  @apply [&::-webkit-scrollbar]:hidden;
 }

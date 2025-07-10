@@ -20,7 +20,7 @@ export default async function RootLayout({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") || "";
 
-  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/landing"];
+  const EXCLUDE_NAVIGATION_PATHS = ["/onboarding", "/landing", "/plan"];
   const isExcludeNavigation = EXCLUDE_NAVIGATION_PATHS.some((path) =>
     pathname.startsWith(path)
   );
@@ -36,9 +36,7 @@ export default async function RootLayout({
       <body className="relative bg-primary-50">
         <Suspense fallback={null}>
           <SWRProvider>
-            <main
-              className={clsx("bg-background-2 max-w-[393px] mx-auto h-dvh")}
-            >
+            <main className="bg-background-2 max-w-[393px] mx-auto h-dvh">
               {children}
               {!isExcludeNavigation && <Navigation />}
             </main>
