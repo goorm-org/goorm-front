@@ -6,12 +6,12 @@ export interface MapLocation {
   lng?: number;
 }
 
-interface TmapDisplayProps {
-  locations: MapLocation[];
-  appKey: string;
-  width?: string;
-  height?: string;
-  zoom?: number;
-  centerLat?: number;
-  centerLng?: number;
-}
+// interface TmapDisplayProps {
+//   locations: MapLocation[];
+//   appKey: string;
+//   width?: string;
+//   height?: string;
+//   zoom?: number;
+//   centerLat?: number;
+//   centerLng?: number;
+// }
