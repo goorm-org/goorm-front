@@ -119,7 +119,7 @@ export default function Shorts({ item, page, currentPage }: ShortsProps) {
   }, [page, currentPage, isPlayerReady]);
 
   return (
-    <div className="flex bg-black max-h-[calc(100dvh-80px)] relative">
+    <div className="flex bg-black h-[calc(100dvh-80px)] relative">
       <div className="w-full aspect-[9/16] relative max-w-sm mx-auto max-h-[calc(100dvh-80px)]">
         <YouTube
           videoId={extractVideoId(item.details.shortsUrl)}

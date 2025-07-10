@@ -26,7 +26,7 @@ export default function OnboardingFooter() {
   const router = useRouter();
   const { nextStep, step, isLastStep } = useStep();
   const [isLoading, setIsLoading] = useState(false);
-  const { watch, handleSubmit } = useFormContext<OnboardingSchema>();
+  const { getValues, watch } = useFormContext<OnboardingSchema>();
 
   const isValid = () => {
     const fieldsToValidate =
@@ -42,17 +42,24 @@ export default function OnboardingFooter() {
     return onboardingSchema.pick(pickObject).safeParse(watch()).success;
   };
 
-  const onSubmit = async (data: OnboardingSchema) => {
-    setOnboardingDataToSessionStorage(data);
-    setIsLoading(true);
-    await postOnboardingInfo({
+  const onSubmit = async () => {
+    const data = getValues();
+
+    const body = {
       vibeList: data.vibeList,
       placeCategoryList: data.placeCategoryList,
       from: dayjs(data.departure_date).format("YYYY-MM-DD"),
       to: dayjs(data.arrival_date).format("YYYY-MM-DD"),
-    });
+    };
+    setIsLoading(true);
+    setOnboardingDataToSessionStorage(data);
     setIsCompletedOnboardingToSessionStorage();
-    router.push("/explore");
+
+    await postOnboardingInfo(body);
+
+    setTimeout(() => {
+      router.push("/explore");
+    }, 2000);
   };
 
   return (
@@ -62,7 +69,13 @@ export default function OnboardingFooter() {
           stretch
           className="bg-primary-700"
           size="lg"
-          onClick={isLastStep ? handleSubmit(onSubmit) : nextStep}
+          onClick={() => {
+            if (isLastStep) {
+              onSubmit();
+            } else {
+              nextStep();
+            }
+          }}
           disabled={!isValid()}
         >
           NEXT STEP
