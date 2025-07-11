@@ -64,9 +64,9 @@ export default function AddTripDrawerFloatButton({
         <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[28px] mt-24 lg:h-fit  fixed bottom-0 left-0 right-0 z-40 w-full max-w-[393px] mx-auto">
           <div className="pt-4 bg-white rounded-t-[28px] flex-1 z-50">
             <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-[16px]" />
-            <Drawer.DialogTitle className="text-center text-[20px] font-bold leading-[30px] mb-[8px] pb-[8px] border-b border-gray-200">
+            <Drawer.Title className="text-center text-[20px] font-bold leading-[30px] mb-[8px] pb-[8px] border-b border-gray-200">
               My Trip List
-            </Drawer.DialogTitle>
+            </Drawer.Title>
             {isCompletedOnboarding ? (
               <SelectTripDate
                 startDate={dayjs(onboardingData?.departure_date).format(
