@@ -7,7 +7,6 @@ import { getTripList } from "./_apis/plan";
 import Slider from "react-slick";
 import PlanHeader from "@/app/plan/_components/plan-header";
 import { Badge, Button } from "@vapor-ui/core";
-import { MapLocation } from "@/app/map/_types/map";
 import PlanMap from "@/app/plan/_components/plan-map";
 import TrafficBadge from "@/app/plan/_components/traffic-badge";
 import Image from "next/image";

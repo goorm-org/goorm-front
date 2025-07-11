@@ -5,7 +5,6 @@ export interface MapLocation {
   latitude: number;
   longitude: number;
 }
-[];
 
 export interface ShortsData {
   id: number;
