@@ -8,17 +8,14 @@ const fetcher = async () => {
 };
 
 const useSavedPlaceList = () => {
-  const { data, error, isLoading, mutate } = useSWR(
-    "/api/saved-place-list",
-    fetcher
-  );
+  const { data, mutate } = useSWR("/api/saved-place-list", fetcher);
 
   const deleteBookmarks = async (ids: number[]) => {
     await deleteShortBookmark(ids);
     mutate();
   };
 
-  return { data, error, isLoading, deleteBookmarks };
+  return { data, deleteBookmarks };
 };
 
 export default useSavedPlaceList;
