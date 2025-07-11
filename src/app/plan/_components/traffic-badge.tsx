@@ -5,7 +5,7 @@ export default function TrafficBadge({
   trafficStatus,
 }: {
   // TODO: API res에 맞춰서 type 수정
-  trafficStatus: "high" | "middle" | "row";
+  trafficStatus: "high" | "middle" | "low";
 }) {
   if (!trafficStatus) return null;
 

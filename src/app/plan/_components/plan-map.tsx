@@ -15,7 +15,7 @@ export default function PlanMap({
   width: string;
   height: string;
   zoom: number;
-  locations: MapLocation[];
+  locations: MapLocation[] | any[];
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapId = useId();
@@ -40,8 +40,11 @@ export default function PlanMap({
     "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/ico-marker-three.svg",
   ];
 
-  const CENTER_LAT = locations[1]?.latitude || 33.450233;
-  const CENTER_LNG = locations[1]?.longitude || 126.918494;
+  const CENTER_LAT = locations?.[0]?.latitude || 33.450233;
+  const CENTER_LNG = locations?.[0]?.longitude || 126.918494;
+
+  // 디버깅용 로그
+  console.log("PlanMap locations:", locations);
 
   // 티맵 스크립트 로드
   useEffect(() => {
@@ -254,7 +257,10 @@ export default function PlanMap({
   };
 
   // 여러 개의 polyline을 관리
-  const drawRoutes = async (locations: MapLocation[], mapInstance: any) => {
+  const drawRoutes = async (
+    locations: MapLocation[] | any[],
+    mapInstance: any
+  ) => {
     // 기존 경로선 제거
     polylines.forEach((pl) => pl.setMap(null));
     setPolylines([]);
@@ -310,9 +316,17 @@ export default function PlanMap({
           }
         );
         const data = await response.json();
+        console.log("경로 API 응답:", data); // 디버깅용
+
+        // 응답이 에러인지 확인
+        if (data.error || data.status !== "OK") {
+          console.warn("경로 API 에러:", data.error || data.status);
+          continue;
+        }
+
         const resultData = data.features;
         if (!Array.isArray(resultData)) {
-          console.error("경로 API 응답 오류: features가 배열이 아님", data);
+          console.warn("경로 API 응답: features가 배열이 아님", data);
           continue;
         }
         const linePoints: any[] = [];
@@ -350,7 +364,7 @@ export default function PlanMap({
 
   // 마커와 인포윈도우 생성 및 경로선 그리기
   useEffect(() => {
-    if (!map || !window.Tmapv2 || locations.length < 2) return;
+    if (!map || !window.Tmapv2 || !locations?.length) return;
     const requiredClasses = [
       "LatLngBounds",
       "LatLng",
@@ -389,9 +403,14 @@ export default function PlanMap({
       try {
         const bounds = new window.Tmapv2.LatLngBounds();
         for (let i = 0; i < locations.length; i++) {
-          const location = locations[i];
+          const location = locations[i] as any;
           let lat = location.latitude;
           let lng = location.longitude;
+
+          // 좌표가 문자열인 경우 숫자로 변환
+          if (typeof lat === "string") lat = parseFloat(lat);
+          if (typeof lng === "string") lng = parseFloat(lng);
+
           if (!lat || !lng) {
             const coords = await geocodeAddress(location.address);
             if (coords) {
@@ -443,10 +462,10 @@ export default function PlanMap({
             console.warn("지도 중심 설정 실패:", error);
           }
         }
-        // 모든 지점 쌍에 대해 경로 그리기
-        if (locations.length > 1) {
-          await drawRoutes(locations, map);
-        }
+        // 모든 지점 쌍에 대해 경로 그리기 (임시로 비활성화)
+        // if (locations.length > 1) {
+        //   await drawRoutes(locations, map);
+        // }
       } catch (error) {
         console.error("위치 처리 중 전체 오류:", error);
       }
@@ -476,17 +495,17 @@ export default function PlanMap({
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary-600 mx-auto mb-4" />
         </div>
       )}
+      {!locations?.length && isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-90 rounded-lg">
+          <p className="text-gray-500">표시할 위치가 없습니다.</p>
+        </div>
+      )}
       {routeError && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-100 text-red-700 px-4 py-2 rounded shadow">
           {routeError}
         </div>
       )}
       <div ref={mapRef} id={`tmap-${mapId}`} style={{ width, height }} />
-      {locations.length === 0 && isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-90 rounded-lg">
-          <p className="text-gray-500">표시할 위치가 없습니다.</p>
-        </div>
-      )}
     </div>
   );
 }

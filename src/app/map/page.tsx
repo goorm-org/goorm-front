@@ -376,12 +376,12 @@ export default function Map() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary-600 mx-auto mb-4" />
         </div>
       )}
-      <div ref={mapRef} id={`tmap-${mapId}`} style={{ width, height }} />
       {locations?.length === 0 && isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-90 rounded-lg">
           <p className="text-gray-500">표시할 위치가 없습니다.</p>
         </div>
       )}
+      <div ref={mapRef} id={`tmap-${mapId}`} style={{ width, height }} />
 
       {/* place info bottom sheets */}
       <Drawer.Root

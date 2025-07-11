@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import useSWR from "swr";
 import { getTripList } from "./_apis/plan";
 // import { useSearchParams } from "next/navigation";
@@ -10,21 +12,53 @@ import { Badge, Button } from "@vapor-ui/core";
 import PlanMap from "@/app/plan/_components/plan-map";
 import TrafficBadge from "@/app/plan/_components/traffic-badge";
 import Image from "next/image";
+import clsx from "clsx";
 
 export default function Plan() {
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [tripList, setTripList] = useState<any>(null);
   let sliderRef = useRef<Slider | null>(null);
 
   // const searchParams = useSearchParams();
 
-  const { data: tripList } = useSWR("getTripList", () =>
+  const { data } = useSWR("getTripList", () =>
     getTripList({
       // date: searchParams.get("date"),
       // placeIds: [Number(searchParams.get("placeIds"))],
-      date: "2025-07-11",
-      placeIds: [1],
+      date: "2025-07-05",
+      placeIds: [5, 4, 2],
     })
   );
+
+  useEffect(() => {
+    if (data) {
+      // 메인 데이터 중복 제거
+      const uniqueData = Array.isArray(data.data)
+        ? (data.data as any[]).filter(
+            (item: any, idx: number, arr: any[]) =>
+              arr.findIndex((v: any) => v.id === item.id) === idx
+          )
+        : data.data;
+
+      // 각 place의 recommendations 중복도 제거
+      const processedData = (uniqueData as any[]).map((place: any) => ({
+        ...place,
+        recommendations: Array.isArray(place.recommendations)
+          ? (place.recommendations as any[]).filter(
+              (rec: any, idx: number, arr: any[]) =>
+                arr.findIndex((v: any) => v.id === rec.id) === idx
+            )
+          : place.recommendations,
+      }));
+
+      setTripList({
+        ...data,
+        data: processedData,
+      });
+    }
+  }, [data]);
+
+  if (tripList) console.log("tripList", tripList);
 
   // 유튜브 URL에서 비디오 ID 추출
   const getYouTubeVideoId = (url: string) => {
@@ -40,47 +74,47 @@ export default function Plan() {
     return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   };
 
-  interface Recommendation {
-    title: string;
-    categoryHigh: string;
-    address: string;
-    shortsUrl: string;
-    latitude: number;
-    longitude: number;
-  }
+  // interface Recommendation {
+  //   title: string;
+  //   categoryHigh: string;
+  //   address: string;
+  //   shortsUrl: string;
+  //   latitude: number;
+  //   longitude: number;
+  // }
 
-  let recommendations: {
-    placeName: string;
-    categoryHigh: string;
-    address: string;
-    shortsUrl: string;
-    latitude: number;
-    longitude: number;
-  }[] = [];
+  // const recommendations: {
+  //   placeName: string;
+  //   categoryHigh: string;
+  //   address: string;
+  //   shortsUrl: string;
+  //   latitude: number;
+  //   longitude: number;
+  // }[] = [];
 
-  if (
-    tripList &&
-    Array.isArray(tripList.data) &&
-    tripList.data[0] &&
-    Array.isArray(tripList.data[0].recommendations)
-  ) {
-    recommendations =
-      (tripList.data[0].recommendations as Recommendation[]).map(
-        ({ title, categoryHigh, address, shortsUrl, latitude, longitude }) => ({
-          placeName: title,
-          categoryHigh,
-          address,
-          shortsUrl,
-          latitude,
-          longitude,
-        })
-      ) || [];
-  }
+  // if (
+  //   tripList &&
+  //   Array.isArray(tripList) &&
+  //   tripList[0] &&
+  //   Array.isArray(tripList[0].recommendations)
+  // ) {
+  //   recommendations =
+  //     (tripList.ta[0].recommendations as Recommendation[]).map(
+  //       ({ title, categoryHigh, address, shortsUrl, latitude, longitude }) => ({
+  //         placeName: title,
+  //         categoryHigh,
+  //         address,
+  //         shortsUrl,
+  //         latitude,
+  //         longitude,
+  //       })
+  //     ) || [];
+  // }
 
   const next = () => {
     sliderRef.current?.slickNext();
     const length =
-      tripList?.data && Array.isArray(tripList.data) ? tripList.data.length : 0;
+      tripList && Array.isArray(tripList) ? (tripList as unknown[]).length : 0;
     setCurrentIdx((prev) =>
       length > 0 ? (prev === length - 1 ? 0 : prev + 1) : 0
     );
@@ -88,8 +122,7 @@ export default function Plan() {
 
   const previous = () => {
     sliderRef.current?.slickPrev();
-    const length =
-      tripList?.data && Array.isArray(tripList.data) ? tripList.data.length : 0;
+    const length = Array.isArray(tripList) ? (tripList as unknown[]).length : 0;
     setCurrentIdx((prev) =>
       length > 0 ? (prev === 0 ? length - 1 : prev - 1) : 0
     );
@@ -195,7 +228,7 @@ export default function Plan() {
               <span className="font-bold text-lg text-gray-800">
                 Day {currentIdx + 1}
               </span>
-              <span className="text-gray-500 text-sm">07.11/Fri</span>
+              <span className="text-gray-500 text-sm">07.05/Sat</span>
             </div>
             <Button variant="ghost" className="cursor-pointer" onClick={next}>
               <span className="sr-only">Next</span>
@@ -209,9 +242,9 @@ export default function Plan() {
                 <path
                   d="M5.80757 11.0877C5.55373 11.3415 5.55373 11.7531 5.80757 12.0069C6.06141 12.2607 6.47297 12.2607 6.72681 12.0069L10.1996 8.53414C10.4961 8.23762 10.4961 7.75685 10.1996 7.46031L6.72681 3.98756C6.47297 3.73372 6.06141 3.73372 5.80757 3.98756C5.55373 4.2414 5.55373 4.65296 5.80757 4.9068L8.898 7.99723L5.80757 11.0877Z"
                   fill={
-                    tripList?.data &&
-                    Array.isArray(tripList.data) &&
-                    currentIdx === tripList?.data?.length - 1
+                    Array.isArray(tripList) &&
+                    (tripList as unknown[]).length > 0 &&
+                    currentIdx === (tripList as unknown[]).length - 1
                       ? "#E1E1E8"
                       : "#525463"
                   }
@@ -235,100 +268,101 @@ export default function Plan() {
               width="100%"
               height="200px"
               zoom={13}
-              locations={recommendations}
+              locations={
+                tripList?.data?.map((place: any) => ({
+                  placeName: place.title,
+                  categoryHigh: place.categoryHigh,
+                  address: place.address,
+                  latitude: place.latitude,
+                  longitude: place.longitude,
+                })) || []
+              }
             />
           </Slider>
           <ul className="relative flex flex-col w-full mt-4 gap-7">
-            <li>
-              <div className="flex gap-4 items-center">
-                <span className="w-9 h-9 rounded-full bg-secondary-600 text-white text-center leading-9 font-bold z-1">
-                  1
-                </span>
-                <Image
-                  src={getYouTubeThumbnail(
-                    recommendations?.[0]?.shortsUrl || ""
-                  )}
-                  width={64}
-                  height={64}
-                  alt="place image"
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-                <div>
-                  <span className="font-bold text-lg">
-                    {recommendations?.[0]?.placeName}
+            {tripList?.data?.map((place: any, idx: number) => (
+              <li key={place.id}>
+                <div className="flex gap-4 items-center">
+                  <span className="w-9 h-9 rounded-full bg-secondary-600 text-white text-center leading-9 font-bold z-1">
+                    {idx + 1}
                   </span>
-                  <div className="flex gap-2 items-center mt-2">
-                    <Badge
-                      className="bg-secondary-50 text-secondary-600"
-                      shape="pill"
-                    >
-                      BEST TIME
-                    </Badge>
-                    <span className="text-secondary-600 font-medium text-xs">
-                      AM 10:00-12:00
-                    </span>
+                  <Image
+                    src={getYouTubeThumbnail(place.shortsUrl || "")}
+                    width={64}
+                    height={64}
+                    alt="place image"
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <span className="font-bold text-lg">{place.title}</span>
+                    <div className="flex gap-2 items-center mt-2">
+                      <Badge
+                        className="bg-secondary-50 text-secondary-600"
+                        shape="pill"
+                      >
+                        {place.categoryHigh}
+                      </Badge>
+                      <span className="text-secondary-600 font-medium text-xs">
+                        {place.openingHours?.[0] || "-"}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* AI Recommended Spot 있을 경우 */}
-              <div className="ml-13">
-                <span className="text-gray-500 text-sm pl-1 pb-3 pt-6 block">
-                  AI Recommended Spots
-                </span>
-                <ul>
-                  <li className="flex gap-4 items-center">
-                    <Image
-                      src={getYouTubeThumbnail(
-                        recommendations?.[1]?.shortsUrl || ""
-                      )}
-                      width={64}
-                      height={64}
-                      alt="place image"
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                    <div>
-                      <span className="font-bold text-lg">
-                        {recommendations?.[1]?.placeName}
+                {/* AI 추천 장소가 있을 경우 */}
+                {Array.isArray(place.recommendations) &&
+                  place.recommendations.length > 0 && (
+                    <div className="ml-13">
+                      <span className="text-gray-500 text-sm pl-1 pb-3 pt-6 block">
+                        AI Recommended Spots
                       </span>
-                      <div className="flex gap-2 items-center mt-2">
-                        <Badge
-                          shape="pill"
-                          className="p-2 bg-primary-50 text-primary-700"
-                        >
-                          {recommendations?.[1]?.categoryHigh}
-                        </Badge>
-                        <TrafficBadge trafficStatus="high" />
-                      </div>
+                      <ul>
+                        {[
+                          place.recommendations[0],
+                          place.recommendations[2],
+                        ].map((rec: any, idx: number) => (
+                          <li
+                            className={clsx(
+                              "flex gap-4 items-center",
+                              idx === 1 && "mt-4"
+                            )}
+                            key={rec.id}
+                          >
+                            <Image
+                              src={getYouTubeThumbnail(rec.shortsUrl || "")}
+                              width={64}
+                              height={64}
+                              alt="place image"
+                              className="w-16 h-16 rounded-full object-cover"
+                            />
+                            <div>
+                              <span className="font-bold text-lg">
+                                {rec.title}
+                              </span>
+                              <div className="flex gap-2 items-center mt-2">
+                                <Badge
+                                  shape="pill"
+                                  className="p-2 bg-primary-50 text-primary-700"
+                                >
+                                  {rec.categoryHigh}
+                                </Badge>
+                                <TrafficBadge
+                                  trafficStatus={
+                                    rec.congestionDegree === 3
+                                      ? "high"
+                                      : rec.congestionDegree === 1
+                                      ? "low"
+                                      : "middle"
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  </li>
-                  <li className="flex gap-4 items-center mt-4">
-                    <Image
-                      src={getYouTubeThumbnail(
-                        recommendations?.[3]?.shortsUrl || ""
-                      )}
-                      width={64}
-                      height={64}
-                      alt="place image"
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                    <div>
-                      <span className="font-bold text-lg">
-                        {recommendations?.[3]?.placeName}
-                      </span>
-                      <div className="flex gap-2 items-center mt-2">
-                        <Badge
-                          shape="pill"
-                          className="p-2 bg-primary-50 text-primary-700"
-                        >
-                          {recommendations?.[3]?.categoryHigh}
-                        </Badge>
-                        <TrafficBadge trafficStatus="middle" />
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
+                  )}
+              </li>
+            ))}
           </ul>
         </section>
       </div>
