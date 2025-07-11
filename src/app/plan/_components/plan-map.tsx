@@ -40,8 +40,8 @@ export default function PlanMap({
     "https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/ico-marker-three.svg",
   ];
 
-  const CENTER_LAT = locations[1]?.lat || 33.450233;
-  const CENTER_LNG = locations[1]?.lng || 126.918494;
+  const CENTER_LAT = locations[1]?.latitude || 33.450233;
+  const CENTER_LNG = locations[1]?.longitude || 126.918494;
 
   // 티맵 스크립트 로드
   useEffect(() => {
@@ -265,11 +265,11 @@ export default function PlanMap({
       const end = locations[i + 1];
       // 각 구간별로 경로 API 호출 및 polyline 생성
       try {
-        // lat/lng 타입 가드 및 주소 변환
-        let startLat = start.lat;
-        let startLng = start.lng;
-        let endLat = end.lat;
-        let endLng = end.lng;
+        // // lat/lng 타입 가드 및 주소 변환
+        let startLat = start.latitude;
+        let startLng = start.longitude;
+        let endLat = end.latitude;
+        let endLng = end.longitude;
         if (!startLat || !startLng) {
           const coords = await geocodeAddress(start.address);
           if (coords) {
@@ -306,8 +306,6 @@ export default function PlanMap({
               endY: endLat.toString(),
               reqCoordType: "WGS84GEO",
               resCoordType: "EPSG3857",
-              startName: start.description || "출발지",
-              endName: end.description || "도착지",
             }),
           }
         );
@@ -344,10 +342,7 @@ export default function PlanMap({
           newPolylines.push(newPolyline);
         }
       } catch (error) {
-        console.error(
-          `경로 그리기 실패 (${start.description} → ${end.description}):`,
-          error
-        );
+        console.error(error);
       }
     }
     setPolylines(newPolylines);
@@ -395,8 +390,8 @@ export default function PlanMap({
         const bounds = new window.Tmapv2.LatLngBounds();
         for (let i = 0; i < locations.length; i++) {
           const location = locations[i];
-          let lat = location.lat;
-          let lng = location.lng;
+          let lat = location.latitude;
+          let lng = location.longitude;
           if (!lat || !lng) {
             const coords = await geocodeAddress(location.address);
             if (coords) {
@@ -430,7 +425,7 @@ export default function PlanMap({
             newMarkers.push(marker);
             newInfoWindows.push(infoWindow);
           } catch (error) {
-            console.error(`마커 생성 실패 (${location.description}):`, error);
+            console.error(error);
           }
         }
         setMarkers(newMarkers);

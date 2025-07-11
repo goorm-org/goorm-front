@@ -2,6 +2,6 @@
 
 import { api } from "@/lib/api/client";
 
-export const getTripList = (): Promise<any> => {
-  return api.get("/trips");
+export const getTripList = (data: unknown) => {
+  return api.post("/trips", data);
 };

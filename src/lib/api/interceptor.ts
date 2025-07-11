@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://10.10.123.44:3001",
+  baseURL: "http://43.200.191.129:3000",
   // baseURL: "https://9ff8e924a07c.ngrok-free.app",
   timeout: 5000,
   headers: {

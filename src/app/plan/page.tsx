@@ -1,51 +1,100 @@
 "use client";
 
 import { useRef, useState } from "react";
-
+import useSWR from "swr";
+import { getTripList } from "./_apis/plan";
+// import { useSearchParams } from "next/navigation";
 import Slider from "react-slick";
 import PlanHeader from "@/app/plan/_components/plan-header";
 import { Badge, Button } from "@vapor-ui/core";
 import { MapLocation } from "@/app/map/_types/map";
 import PlanMap from "@/app/plan/_components/plan-map";
 import TrafficBadge from "@/app/plan/_components/traffic-badge";
-// import Image from "next/image";
+import Image from "next/image";
 
 export default function Plan() {
   const [currentIdx, setCurrentIdx] = useState(0);
   let sliderRef = useRef<Slider | null>(null);
 
-  // const { data } = useSWR("getTripList", getTripList);
+  // const searchParams = useSearchParams();
+
+  const { data: tripList } = useSWR("getTripList", () =>
+    getTripList({
+      // date: searchParams.get("date"),
+      // placeIds: [Number(searchParams.get("placeIds"))],
+      date: "2025-07-11",
+      placeIds: [1],
+    })
+  );
+
+  // 유튜브 URL에서 비디오 ID 추출
+  const getYouTubeVideoId = (url: string) => {
+    const videoIdMatch = url.match(
+      /(?:youtube\.com\/shorts\/|youtu\.be\/|youtube\.com\/watch\?v=)([^&\n?#]+)/
+    );
+    return videoIdMatch ? videoIdMatch[1] : null;
+  };
+
+  // 유튜브 썸네일 URL 생성
+  const getYouTubeThumbnail = (url: string) => {
+    const videoId = getYouTubeVideoId(url);
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  };
+
+  interface Recommendation {
+    title: string;
+    categoryHigh: string;
+    address: string;
+    shortsUrl: string;
+    latitude: number;
+    longitude: number;
+  }
+
+  let recommendations: {
+    placeName: string;
+    categoryHigh: string;
+    address: string;
+    shortsUrl: string;
+    latitude: number;
+    longitude: number;
+  }[] = [];
+
+  if (
+    tripList &&
+    Array.isArray(tripList.data) &&
+    tripList.data[0] &&
+    Array.isArray(tripList.data[0].recommendations)
+  ) {
+    recommendations =
+      (tripList.data[0].recommendations as Recommendation[]).map(
+        ({ title, categoryHigh, address, shortsUrl, latitude, longitude }) => ({
+          placeName: title,
+          categoryHigh,
+          address,
+          shortsUrl,
+          latitude,
+          longitude,
+        })
+      ) || [];
+  }
 
   const next = () => {
     sliderRef.current?.slickNext();
-    setCurrentIdx((prev) => (prev === locations.length - 1 ? 0 : prev + 1));
+    const length =
+      tripList?.data && Array.isArray(tripList.data) ? tripList.data.length : 0;
+    setCurrentIdx((prev) =>
+      length > 0 ? (prev === length - 1 ? 0 : prev + 1) : 0
+    );
   };
 
   const previous = () => {
     sliderRef.current?.slickPrev();
-    setCurrentIdx((prev) => (prev === 0 ? locations.length - 1 : prev - 1));
+    const length =
+      tripList?.data && Array.isArray(tripList.data) ? tripList.data.length : 0;
+    setCurrentIdx((prev) =>
+      length > 0 ? (prev === 0 ? length - 1 : prev - 1) : 0
+    );
   };
-
-  const locations: MapLocation[] = [
-    {
-      lat: 33.452651,
-      lng: 126.92461,
-      address: "서귀포시 성산읍 고성리 224-33",
-      description: "광치기해변",
-    },
-    {
-      lat: 33.450206,
-      lng: 126.918408,
-      address: "서귀포시 성산읍 동류암로 20",
-      description: "플레이스 캠프 제주",
-    },
-    {
-      lat: 33.440708,
-      lng: 126.898767,
-      address: "서귀포시 성산읍 서성일로 1168번길",
-      description: "빛의 벙커",
-    },
-  ];
 
   return (
     <div className="h-dvh">
@@ -161,7 +210,11 @@ export default function Plan() {
                 <path
                   d="M5.80757 11.0877C5.55373 11.3415 5.55373 11.7531 5.80757 12.0069C6.06141 12.2607 6.47297 12.2607 6.72681 12.0069L10.1996 8.53414C10.4961 8.23762 10.4961 7.75685 10.1996 7.46031L6.72681 3.98756C6.47297 3.73372 6.06141 3.73372 5.80757 3.98756C5.55373 4.2414 5.55373 4.65296 5.80757 4.9068L8.898 7.99723L5.80757 11.0877Z"
                   fill={
-                    currentIdx === locations.length - 1 ? "#E1E1E8" : "#525463"
+                    tripList?.data &&
+                    Array.isArray(tripList.data) &&
+                    currentIdx === tripList?.data?.length - 1
+                      ? "#E1E1E8"
+                      : "#525463"
                   }
                 />
               </svg>
@@ -183,7 +236,7 @@ export default function Plan() {
               width="100%"
               height="200px"
               zoom={13}
-              locations={locations}
+              locations={recommendations}
             />
           </Slider>
           <ul className="relative flex flex-col w-full mt-4 gap-7">
@@ -192,16 +245,19 @@ export default function Plan() {
                 <span className="w-9 h-9 rounded-full bg-secondary-600 text-white text-center leading-9 font-bold z-1">
                   1
                 </span>
-                {/* <Image
-                  // TODO: 임시 이미지
-                  src="https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/ico-marker-one.svg"
+                <Image
+                  src={getYouTubeThumbnail(
+                    recommendations?.[0]?.shortsUrl || ""
+                  )}
                   width={64}
                   height={64}
                   alt="place image"
-                /> */}
-                <div className="w-16 h-16 rounded-full bg-secondary-600" />
+                  className="w-16 h-16 rounded-full object-cover"
+                />
                 <div>
-                  <span className="font-bold text-lg">$PLACE_NAME$</span>
+                  <span className="font-bold text-lg">
+                    {recommendations?.[0]?.placeName}
+                  </span>
                   <div className="flex gap-2 items-center mt-2">
                     <Badge
                       className="bg-secondary-50 text-secondary-600"
@@ -210,7 +266,7 @@ export default function Plan() {
                       BEST TIME
                     </Badge>
                     <span className="text-secondary-600 font-medium text-xs">
-                      10-12AM
+                      AM 10:00-12:00
                     </span>
                   </div>
                 </div>
@@ -222,24 +278,52 @@ export default function Plan() {
                 </span>
                 <ul>
                   <li className="flex gap-4 items-center">
-                    {/* <Image
-                    // TODO: 임시 이미지
-                    src="https://pub-cf3b9667253a490495a16433a99bd7ca.r2.dev/hansol/ico-marker-one.svg"
-                    width={64}
-                    height={64}
-                    alt="place image"
-                  /> */}
-                    <div className="w-16 h-16 rounded-full bg-secondary-600" />
+                    <Image
+                      src={getYouTubeThumbnail(
+                        recommendations?.[1]?.shortsUrl || ""
+                      )}
+                      width={64}
+                      height={64}
+                      alt="place image"
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
                     <div>
-                      <span className="font-bold text-lg">$PLACE_NAME$</span>
+                      <span className="font-bold text-lg">
+                        {recommendations?.[1]?.placeName}
+                      </span>
                       <div className="flex gap-2 items-center mt-2">
                         <Badge
                           shape="pill"
                           className="p-2 bg-primary-50 text-primary-700"
                         >
-                          CAFE
+                          {recommendations?.[1]?.categoryHigh}
                         </Badge>
                         <TrafficBadge trafficStatus="high" />
+                      </div>
+                    </div>
+                  </li>
+                  <li className="flex gap-4 items-center mt-4">
+                    <Image
+                      src={getYouTubeThumbnail(
+                        recommendations?.[3]?.shortsUrl || ""
+                      )}
+                      width={64}
+                      height={64}
+                      alt="place image"
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                    <div>
+                      <span className="font-bold text-lg">
+                        {recommendations?.[3]?.placeName}
+                      </span>
+                      <div className="flex gap-2 items-center mt-2">
+                        <Badge
+                          shape="pill"
+                          className="p-2 bg-primary-50 text-primary-700"
+                        >
+                          {recommendations?.[3]?.categoryHigh}
+                        </Badge>
+                        <TrafficBadge trafficStatus="middle" />
                       </div>
                     </div>
                   </li>

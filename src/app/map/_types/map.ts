@@ -1,10 +1,11 @@
 export interface MapLocation {
+  placeName: string;
+  categoryHigh: string;
   address: string;
-  description: string;
-  title?: string;
-  lat?: number;
-  lng?: number;
+  latitude: number;
+  longitude: number;
 }
+[];
 
 export interface ShortsData {
   id: number;
