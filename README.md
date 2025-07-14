@@ -2,7 +2,7 @@
 
 ![thumbnail](https://github.com/user-attachments/assets/23f28deb-ce28-419a-b5d7-d196502d989c)
 
-> 🏆 <b>구름톤 in Jeju 해커톤 대상</b><br />
+> 🏆 <b>9oormthon in Jeju 14th 해커톤 대상</b><br />
 
 **숏폼 기반 탐색과 AI 루트 설계, 혼잡도**까지!<br />
 나만의 제주를 누릴 수 있는 여행 서비스, **JejuGo**
