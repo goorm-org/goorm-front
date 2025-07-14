@@ -4,8 +4,7 @@
 
 > 🏆 <b>9oormthon in Jeju 14th 해커톤 대상</b><br />
 
-**숏폼 기반 탐색과 AI 루트 설계, 혼잡도**까지!<br />
-나만의 제주를 누릴 수 있는 여행 서비스, **JejuGo**
+**숏폼 기반 탐색과 AI 루트 설계, 혼잡도**까지! 나만의 제주를 누릴 수 있는 여행 서비스, **JejuGo**
 
 <br /><br />
 
@@ -107,7 +106,7 @@
       <a href="mailto:8clara@gachon.ac.kr" ><b>변교리</b></a>
     </td>
     <td align="center">
-      <a href="s94291495@gmail.com"><b>송정연</b></a>
+      <a href="mailto:s94291495@gmail.com"><b>송정연</b></a>
     </td>
     <td align="center">
       <a href="https://github.com/eungwang1" target="_blank" rel="noopener noreferrer"><b>심은광</b></a>
