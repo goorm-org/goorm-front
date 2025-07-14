@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://api.jejugo.daylog.cloud",
+  baseURL: "http://13.125.201.196:3001",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
