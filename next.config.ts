@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  output: "standalone",
+  // output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["@vapor-ui/core"],
   },
   webpack: (config, { isServer }) => {
-    // Next.js 15 webpack 오류 해결
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
