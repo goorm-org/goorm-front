@@ -8,7 +8,7 @@ export const axiosInstance = axios.create({
   baseURL:
     process.env.NODE_ENV === "production"
       ? "/api" // vercel production 환경에서는 proxy 경로 사용
-      : "http://13.125.201.196:3001", // 그 외 preview, local은 직접 호출
+      : "https://api.jejugo.goorm.training", // 그 외 preview, local은 직접 호출
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
