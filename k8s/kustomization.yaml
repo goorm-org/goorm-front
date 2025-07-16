@@ -1,8 +1,0 @@
-resources:
-  - frontend.yaml
-  - ingress.yaml
-
-configMapGenerator:
-  - name: react-frontend-config
-    files:
-      - config.json=config/config.json
